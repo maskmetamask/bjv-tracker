@@ -224,7 +224,15 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 </div>
 
-<script>document.write('<script src="products.js"><\/script>');</script>
+<script>
+// Load products.js synchronously before main code runs
+(function(){
+  var s = document.createElement('script');
+  s.src = 'products.js';
+  s.async = false;
+  document.head.appendChild(s);
+})();
+</script>
 <script>
 // Products loaded from products.js
 
