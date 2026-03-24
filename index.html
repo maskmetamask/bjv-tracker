@@ -269,7 +269,7 @@ var DB=[
   {n:"арахісова паста",k:588,p:25,f:50,c:20,fi:6},
   {n:"горох варений",k:116,p:8,f:0.4,c:21,fi:8.3},{n:"квасоля варена",k:127,p:8.7,f:0.5,c:22,fi:7.4},
   {n:"сочевиця варена",k:116,p:9,f:0.4,c:20,fi:7.9},{n:"нут варений",k:164,p:9,f:2.6,c:27,fi:7.6},
-  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},
+  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},{n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9},
 ];
 
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
@@ -458,7 +458,7 @@ function showDD(q){
     document.getElementById('ri'+idx).addEventListener('touchend',function(e){e.preventDefault();pick(idx);});
   })(i);}
 }
-function pick(i){if(i<0||i>=results.length)return;sel=results[i];document.getElementById('siwrap').style.display='none';document.getElementById('btxt').textContent=sel.n+' · '+Math.round(sel.k)+' ккал/100г';document.getElementById('badge').style.display='inline-flex';document.getElementById('dd').style.display='none';setTimeout(function(){document.getElementById('gi').focus();},30);},{n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9}
+function pick(i){if(i<0||i>=results.length)return;sel=results[i];document.getElementById('siwrap').style.display='none';document.getElementById('btxt').textContent=sel.n+' · '+Math.round(sel.k)+' ккал/100г';document.getElementById('badge').style.display='inline-flex';document.getElementById('dd').style.display='none';setTimeout(function(){document.getElementById('gi').focus();},30);}
 function clearSel(){sel=null;results=[];hi=-1;document.getElementById('badge').style.display='none';document.getElementById('siwrap').style.display='';document.getElementById('si').value='';document.getElementById('dd').style.display='none';}
 function addMeal(){var g=parseFloat(document.getElementById('gi').value),err=document.getElementById('err');if(!sel){err.textContent='Спочатку оберіть продукт зі списку';return;}if(!g||g<=0){err.textContent='Введіть вагу в грамах';return;}err.textContent='';var r=g/100;meals.push({name:sel.n,grams:g,k:sel.k*r,p:sel.p*r,f:sel.f*r,c:sel.c*r,fi:sel.fi*r});clearSel();document.getElementById('gi').value='';render();}
 function del(i){meals.splice(i,1);render();}
