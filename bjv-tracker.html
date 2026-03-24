@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<title>БЖВ Трекер</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#f5f5f0;color:#1a1a1a;padding-bottom:80px}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e0e0da;display:flex;z-index:100;height:64px;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:#aaa;font-size:10px;font-weight:500;padding:8px 4px;min-height:44px}
+.bnav-item.active{color:#1a1a1a}
+.bnav-icon{font-size:20px;line-height:1}
+.page{display:none;padding:16px 16px 8px}
+.page.active{display:block}
+.day-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.date-input-wrap{display:flex;align-items:center;gap:8px;flex:1}
+input[type=date]{font-size:15px;font-weight:500;border:1.5px solid #ddd;border-radius:10px;padding:8px 12px;outline:none;background:#fff;color:#1a1a1a;flex:1;min-height:44px}
+input[type=date]:focus{border-color:#4a90e2}
+.today-btn{font-size:13px;padding:8px 14px;border:1.5px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;color:#555;white-space:nowrap;min-height:44px}
+.sync-status{font-size:12px;margin-bottom:4px;min-height:18px;display:flex;align-items:center;gap:6px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#ddd;flex-shrink:0}
+.sync-dot.ok{background:#16a34a}
+.sync-dot.err{background:#e53935}
+.sync-dot.loading{background:#f59e0b;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.datelbl{font-size:13px;color:#888;margin-bottom:12px}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.sc{background:#fff;border-radius:12px;padding:10px 8px;border:1px solid #e8e8e3;text-align:center}
+.sl{font-size:10px;color:#999;margin-bottom:2px}
+.sv{font-size:15px;font-weight:600;line-height:1.2}
+.su{font-size:10px;color:#bbb}
+.ss{font-size:10px;color:#bbb;margin-top:1px}
+.pb{height:4px;border-radius:2px;background:#eee;margin-top:4px;overflow:hidden}
+.pf{height:100%;border-radius:2px;transition:width .3s}
+.box{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e3}
+.lbl{font-size:12px;font-weight:500;color:#555;margin-bottom:6px}
+.si-wrap{position:relative;margin-bottom:10px}
+.si-wrap input[type=text]{width:100%;padding:13px 16px;font-size:16px;border:1.5px solid #ddd;border-radius:12px;outline:none;background:#fafaf8;-webkit-appearance:none}
+.si-wrap input[type=text]:focus{border-color:#4a90e2;background:#fff}
+.dd{position:absolute;top:calc(100% + 3px);left:0;right:0;background:#fff;border:1.5px solid #ddd;border-radius:12px;z-index:200;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.15);display:none;max-height:280px;overflow-y:auto}
+.ddi{padding:13px 16px;font-size:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f2f2ee;min-height:52px}
+.ddi:last-child{border-bottom:none}
+.ddi:active{background:#f0f7ff}
+.ddi-custom{border-left:3px solid #16a34a}
+.ddn{font-weight:500}
+.ddh{font-size:11px;color:#aaa;white-space:nowrap;margin-left:8px;flex-shrink:0}
+.badge{display:none;align-items:center;gap:8px;background:#e8f0fd;color:#1d4ed8;font-size:13px;padding:8px 14px;border-radius:10px;margin-bottom:10px}
+.badge span{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge button{background:none;border:none;cursor:pointer;color:#1d4ed8;font-size:22px;line-height:1;padding:0 0 0 4px;flex-shrink:0;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center}
+.grow{display:flex;gap:10px;align-items:center}
+.grow input[type=number]{width:100px;padding:13px 14px;font-size:16px;border:1.5px solid #ddd;border-radius:12px;outline:none;background:#fafaf8;-webkit-appearance:none}
+.grow input[type=number]:focus{border-color:#4a90e2;background:#fff}
+.add-btn{flex:1;padding:13px;font-size:16px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:12px;cursor:pointer;min-height:50px}
+.add-btn:active{opacity:.85}
+.err{font-size:12px;color:#e53935;margin-top:6px;min-height:16px}
+.sec{font-size:13px;font-weight:500;color:#555;margin-bottom:8px;margin-top:4px}
+.mlist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.mi{background:#fff;border-radius:14px;padding:13px 16px;border:1px solid #e8e8e3}
+.mirow{display:flex;align-items:center;gap:8px}
+.min{flex:1;font-size:15px;font-weight:500}
+.mig{font-size:12px;color:#bbb;font-weight:400;margin-left:4px}
+.mim{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.mp{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:#555}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+.del{background:none;border:none;cursor:pointer;font-size:22px;color:#ddd;line-height:1;padding:4px;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center}
+.del:active{color:#e53935}
+.empty{text-align:center;padding:32px 16px;font-size:14px;color:#ccc}
+.save-day-btn{width:100%;padding:14px;font-size:16px;font-weight:600;background:#16a34a;color:#fff;border:none;border-radius:14px;cursor:pointer;margin-top:4px;min-height:52px}
+.save-day-btn:active{background:#15803d}
+.saved-ok{font-size:13px;color:#16a34a;text-align:center;margin-top:8px;min-height:20px}
+.day-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:10px;border:1px solid #e8e8e3}
+.day-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.day-date{font-size:16px;font-weight:600}
+.day-actions{display:flex;gap:6px}
+.day-edit{background:none;border:1px solid #ddd;cursor:pointer;font-size:13px;color:#555;padding:6px 12px;border-radius:8px;min-height:36px}
+.day-del{background:none;border:none;cursor:pointer;font-size:13px;color:#aaa;padding:6px 10px;border-radius:8px;min-height:36px}
+.day-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.day-food-list{font-size:13px;color:#888;line-height:2;border-top:1px solid #f0f0ec;padding-top:10px}
+.day-food-item{display:flex;justify-content:space-between}
+.cmp-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.cmp-row select{width:100%;padding:11px 14px;font-size:15px;border:1.5px solid #ddd;border-radius:12px;outline:none;background:#fff;min-height:48px;-webkit-appearance:none}
+.cmp-btn{width:100%;padding:13px;font-size:16px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:12px;cursor:pointer;min-height:50px}
+.no-history{text-align:center;padding:40px 20px;font-size:15px;color:#bbb}
+.mini-bar{height:4px;border-radius:2px;background:#eee;margin-top:4px;overflow:hidden}
+.mini-fill{height:100%;border-radius:2px}
+.cmp-food-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.settings-section{margin-bottom:20px}
+.settings-title{font-size:14px;font-weight:600;color:#555;margin-bottom:10px}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.goal-item{background:#fff;border-radius:12px;padding:12px;border:1px solid #e8e8e3}
+.goal-lbl{font-size:12px;color:#888;margin-bottom:6px}
+.goal-item input,.np-input{width:100%;padding:10px 12px;font-size:16px;border:1.5px solid #ddd;border-radius:10px;outline:none;-webkit-appearance:none;background:#fafaf8}
+.goal-item input:focus,.np-input:focus{border-color:#4a90e2;background:#fff}
+.sv-btn,.np-add-btn{width:100%;padding:13px;font-size:16px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:12px;cursor:pointer;min-height:50px;margin-bottom:8px}
+.sv-btn:active,.np-add-btn:active{background:#333}
+.ok-msg{font-size:13px;color:#16a34a;text-align:center;min-height:20px;margin-bottom:4px}
+.cloud-box{background:#fff;border-radius:16px;padding:16px;border:1px solid #e8e8e3;margin-bottom:12px}
+.cloud-title{font-size:14px;font-weight:600;color:#555;margin-bottom:6px}
+.cloud-desc{font-size:12px;color:#888;margin-bottom:12px;line-height:1.5}
+.cloud-input{width:100%;padding:11px 14px;font-size:14px;border:1.5px solid #ddd;border-radius:10px;outline:none;margin-bottom:8px;background:#fafaf8;-webkit-appearance:none}
+.cloud-input:focus{border-color:#4a90e2;background:#fff}
+.cloud-btn{width:100%;padding:12px;font-size:14px;font-weight:600;background:#2563eb;color:#fff;border:none;border-radius:10px;cursor:pointer;min-height:48px;margin-bottom:8px}
+.cloud-btn:active{background:#1d4ed8}
+.cloud-status{font-size:12px;color:#888;text-align:center;min-height:18px}
+.cloud-setup-link{display:block;text-align:center;font-size:13px;color:#2563eb;margin-top:8px;text-decoration:none}
+.divider{height:1px;background:#f0f0ec;margin:10px 0}
+.export-btn,.import-btn{width:100%;padding:12px;font-size:14px;font-weight:500;background:#fff;color:#555;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;min-height:46px;margin-bottom:8px}
+#importFile{display:none}
+.import-note{font-size:11px;color:#bbb;text-align:center;margin-top:4px;line-height:1.5}
+
+/* CUSTOM PRODUCTS */
+.np-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.np-field label{font-size:11px;color:#888;display:block;margin-bottom:4px}
+.np-field-full{margin-bottom:8px}
+.np-field-full label{font-size:11px;color:#888;display:block;margin-bottom:4px}
+.custom-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.custom-item{background:#f9faf8;border-radius:10px;padding:11px 14px;border:1px solid #e0ede0;display:flex;align-items:center;gap:8px}
+.custom-item-name{flex:1;font-size:14px;font-weight:500}
+.custom-item-macros{font-size:11px;color:#aaa}
+.custom-del{background:none;border:none;cursor:pointer;font-size:18px;color:#ddd;padding:2px 4px;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.custom-del:active{color:#e53935}
+.custom-empty{font-size:13px;color:#ccc;text-align:center;padding:16px 0}
+.badge-custom{background:#e8f5e9;color:#16a34a}
+</style>
+</head>
+<body>
+
+<div class="bnav">
+  <div class="bnav-item active" onclick="showPage('today',this)"><div class="bnav-icon">📋</div><span>Журнал</span></div>
+  <div class="bnav-item" onclick="showPage('history',this)"><div class="bnav-icon">📅</div><span>Історія</span></div>
+  <div class="bnav-item" onclick="showPage('compare',this)"><div class="bnav-icon">📊</div><span>Порівняння</span></div>
+  <div class="bnav-item" onclick="showPage('settings',this)"><div class="bnav-icon">⚙️</div><span>Налаштування</span></div>
+</div>
+
+<!-- TODAY -->
+<div class="page active" id="page-today">
+  <div class="day-row">
+    <div class="date-input-wrap">
+      <input type="date" id="dayPicker" onchange="onDateChange(this.value)"/>
+      <button class="today-btn" onclick="goToday()">Сьогодні</button>
+    </div>
+  </div>
+  <div class="sync-status" id="syncStatus"><div class="sync-dot" id="syncDot"></div><span id="syncText"></span></div>
+  <div class="datelbl" id="datelbl"></div>
+  <div class="summary" id="sum"></div>
+  <div class="box">
+    <div class="lbl">Продукт або страва</div>
+    <div class="si-wrap" id="siwrap">
+      <input type="text" id="si" placeholder="яйце, гречка, курка..." autocomplete="off" autocorrect="off"/>
+      <div class="dd" id="dd"></div>
+    </div>
+    <div class="badge" id="badge"><span id="btxt"></span><button id="bx">×</button></div>
+    <div class="lbl">Вага (грами)</div>
+    <div class="grow">
+      <input type="number" id="gi" placeholder="150" min="1" max="5000" step="1" inputmode="numeric"/>
+      <button class="add-btn" onclick="addMeal()">+ Додати</button>
+    </div>
+    <div class="err" id="err"></div>
+  </div>
+  <div class="sec" id="mealSec">Що з'їдено</div>
+  <div class="mlist" id="mlist"></div>
+  <button class="save-day-btn" onclick="saveDay()">Зберегти день</button>
+  <div class="saved-ok" id="savedok"></div>
+</div>
+
+<!-- HISTORY -->
+<div class="page" id="page-history">
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Історія</h2>
+  <div id="histList"></div>
+</div>
+
+<!-- COMPARE -->
+<div class="page" id="page-compare">
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:14px">Порівняння</h2>
+  <div class="cmp-controls">
+    <div class="cmp-row"><select id="cmpA"></select></div>
+    <div style="text-align:center;font-size:13px;color:#aaa">vs</div>
+    <div class="cmp-row"><select id="cmpB"></select></div>
+    <button class="cmp-btn" onclick="renderCompare()">Порівняти</button>
+  </div>
+  <div id="cmpResult"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Налаштування</h2>
+
+  <!-- CLOUD -->
+  <div class="cloud-box">
+    <div class="cloud-title">☁️ Хмарна синхронізація</div>
+    <div class="cloud-desc">Дані зберігаються в хмарі — доступні з будь-якого пристрою. Використовує JSONBin.io (безкоштовно).</div>
+    <div id="cloudSetup">
+      <div class="lbl">API ключ (X-Master-Key)</div>
+      <input type="password" class="cloud-input" id="cloudKey" placeholder="$2a$10$..."/>
+      <div class="lbl">Bin ID (якщо вже є)</div>
+      <input type="text" class="cloud-input" id="cloudBin" placeholder="залиште порожнім для створення нового"/>
+      <button class="cloud-btn" onclick="setupCloud()">Підключити хмару</button>
+      <div class="cloud-status" id="cloudStatus"></div>
+      <a class="cloud-setup-link" href="https://jsonbin.io" target="_blank">Отримати безкоштовний API ключ →</a>
+    </div>
+    <div id="cloudConnected" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div class="sync-dot ok"></div>
+        <span style="font-size:13px;color:#16a34a;font-weight:500">Підключено</span>
+        <span style="font-size:12px;color:#aaa;margin-left:auto" id="binIdLabel"></span>
+      </div>
+      <button class="cloud-btn" onclick="syncFromCloud(true)" style="background:#16a34a">⬇ Завантажити з хмари</button>
+      <div class="divider"></div>
+      <button class="export-btn" onclick="disconnectCloud()">Відключити хмару</button>
+    </div>
+  </div>
+
+  <!-- MY PRODUCTS -->
+  <div class="settings-section">
+    <div class="settings-title">🥦 Мої продукти</div>
+    <div class="box" style="margin-bottom:0">
+      <div class="lbl" style="margin-bottom:10px">Додати новий продукт</div>
+      <div class="np-field-full">
+        <label>Назва продукту</label>
+        <input type="text" class="np-input" id="npName" placeholder="наприклад: сир рікота" autocorrect="off"/>
+      </div>
+      <div class="np-grid">
+        <div class="np-field"><label>Калорії (ккал)</label><input type="number" class="np-input" id="npK" placeholder="100" inputmode="decimal"/></div>
+        <div class="np-field"><label>Білки (г)</label><input type="number" class="np-input" id="npP" placeholder="0" inputmode="decimal"/></div>
+        <div class="np-field"><label>Жири (г)</label><input type="number" class="np-input" id="npF" placeholder="0" inputmode="decimal"/></div>
+        <div class="np-field"><label>Вуглеводи (г)</label><input type="number" class="np-input" id="npC" placeholder="0" inputmode="decimal"/></div>
+        <div class="np-field"><label>Клітковина (г)</label><input type="number" class="np-input" id="npFi" placeholder="0" inputmode="decimal"/></div>
+      </div>
+      <div style="font-size:11px;color:#aaa;margin-bottom:10px">Всі значення — на 100г продукту</div>
+      <button class="np-add-btn" onclick="addCustomProduct()">+ Додати в базу</button>
+      <div class="ok-msg" id="npOk"></div>
+      <div id="customList"></div>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="settings-section">
+    <div class="settings-title">🎯 Денні цілі</div>
+    <div class="goals-grid">
+      <div class="goal-item"><div class="goal-lbl">Калорії (ккал)</div><input type="number" id="gk" value="2000" inputmode="numeric"/></div>
+      <div class="goal-item"><div class="goal-lbl">Білки (г)</div><input type="number" id="gp" value="120" inputmode="numeric"/></div>
+      <div class="goal-item"><div class="goal-lbl">Жири (г)</div><input type="number" id="gf" value="70" inputmode="numeric"/></div>
+      <div class="goal-item"><div class="goal-lbl">Вуглеводи (г)</div><input type="number" id="gc" value="220" inputmode="numeric"/></div>
+      <div class="goal-item"><div class="goal-lbl">Клітковина (г)</div><input type="number" id="gfi" value="25" inputmode="numeric"/></div>
+    </div>
+    <button class="sv-btn" onclick="saveGoals()">Зберегти цілі</button>
+    <div class="ok-msg" id="goalsok"></div>
+  </div>
+
+  <!-- BACKUP -->
+  <div class="settings-section">
+    <div class="settings-title">💾 Резервна копія</div>
+    <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
+    <button class="import-btn" onclick="document.getElementById('importFile').click()">⬆ Імпорт даних (JSON)</button>
+    <input type="file" id="importFile" accept=".json" onchange="importData(this)"/>
+    <div class="import-note">Ручний спосіб синхронізації якщо хмара не налаштована</div>
+  </div>
+</div>
+
+<script>
+var DB=[
+  {n:"яйце куряче варене",k:155,p:13,f:11,c:1.1,fi:0},{n:"яйце куряче смажене",k:196,p:14,f:15,c:0.5,fi:0},
+  {n:"яєчня",k:196,p:14,f:15,c:0.5,fi:0},{n:"яєчний білок",k:52,p:11,f:0.2,c:0.7,fi:0},
+  {n:"яєчний жовток",k:322,p:16,f:27,c:3.6,fi:0},{n:"білок вареного яйця",k:52,p:10.9,f:0.2,c:0.7,fi:0},
+  {n:"гречка варена",k:92,p:3.4,f:0.6,c:20,fi:2.7},{n:"гречка суха",k:343,p:13,f:3.4,c:71,fi:10},
+  {n:"рис варений",k:130,p:2.7,f:0.3,c:28,fi:0.4},{n:"рис сухий",k:365,p:7,f:0.7,c:79,fi:1.3},
+  {n:"рис карнаролі варений",k:200,p:4.4,f:0.3,c:47.9,fi:0},
+  {n:"вівсянка варена",k:68,p:2.4,f:1.4,c:12,fi:1.7},{n:"вівсянка суха",k:389,p:17,f:7,c:66,fi:10},
+  {n:"макарони варені",k:131,p:5,f:1.1,c:25,fi:1.8},
+  {n:"хліб білий",k:265,p:9,f:3.2,c:49,fi:2.7},{n:"хліб чорний",k:259,p:9,f:3.3,c:48,fi:6.8},{n:"хліб цільнозерновий",k:247,p:13,f:4.2,c:41,fi:7},
+  {n:"картопля варена",k:87,p:2,f:0.1,c:20,fi:1.8},{n:"картопляне пюре",k:83,p:2,f:3.3,c:12,fi:1.2},
+  {n:"булгур варений",k:83,p:3.1,f:0.2,c:18.6,fi:4.5},{n:"пшенична каша варена",k:90,p:3.0,f:0.5,c:18.7,fi:1.3},
+  {n:"куряча грудка варена",k:165,p:31,f:3.6,c:0,fi:0},{n:"куряча грудка запечена",k:175,p:32,f:4,c:0,fi:0},
+  {n:"куряче стегно варене",k:209,p:26,f:11,c:0,fi:0},{n:"курка смажена",k:239,p:27,f:14,c:0,fi:0},
+  {n:"яловичина варена",k:254,p:30,f:15,c:0,fi:0},{n:"свинина нежирна",k:242,p:27,f:15,c:0,fi:0},
+  {n:"лосось",k:208,p:20,f:13,c:0,fi:0},{n:"тунець консервований",k:116,p:26,f:1,c:0,fi:0},
+  {n:"оселедець",k:217,p:17,f:16,c:0,fi:0},{n:"палтус філе запечений",k:111,p:22.5,f:1.6,c:0,fi:0},
+  {n:"сир кисломолочний 5%",k:121,p:17,f:5,c:3.3,fi:0},{n:"сир кисломолочний 0%",k:71,p:18,f:0.6,c:1.8,fi:0},
+  {n:"сир кисломолочний 9%",k:159,p:16,f:9,c:3.3,fi:0},{n:"сир зернистий premialle 7%",k:123,p:11.8,f:7,c:3.1,fi:0},
+  {n:"молоко 2.5%",k:52,p:2.8,f:2.5,c:4.7,fi:0},{n:"кефір",k:53,p:2.9,f:2.5,c:4,fi:0},
+  {n:"йогурт натуральний",k:68,p:5,f:3.2,c:3.5,fi:0},{n:"сметана 15%",k:158,p:2.6,f:15,c:3.4,fi:0},
+  {n:"масло вершкове",k:717,p:0.5,f:81,c:0.1,fi:0},{n:"олія соняшникова",k:899,p:0,f:100,c:0,fi:0},{n:"олія оливкова",k:884,p:0,f:100,c:0,fi:0},
+  {n:"сир твердий гауда",k:356,p:25,f:27,c:2.2,fi:0},{n:"сир моцарела",k:280,p:28,f:17,c:3.1,fi:0},
+  {n:"пармезан grana padano тертий",k:398,p:33,f:29,c:7,fi:0},
+  {n:"банан",k:89,p:1.1,f:0.3,c:23,fi:2.6},{n:"яблуко",k:52,p:0.3,f:0.2,c:14,fi:2.4},{n:"апельсин",k:47,p:0.9,f:0.1,c:12,fi:2.4},
+  {n:"груша",k:57,p:0.4,f:0.1,c:15,fi:3.1},{n:"виноград",k:69,p:0.6,f:0.2,c:18,fi:0.9},
+  {n:"полуниця",k:33,p:0.7,f:0.3,c:8,fi:2},{n:"чорниця",k:57,p:0.7,f:0.3,c:14,fi:2.4},{n:"гранат",k:83,p:1.7,f:1.2,c:18.7,fi:4},
+  {n:"помідор",k:18,p:0.9,f:0.2,c:3.9,fi:1.2},{n:"помідори чері",k:18,p:0.9,f:0.2,c:3.5,fi:1.2},
+  {n:"огірок",k:16,p:0.7,f:0.1,c:3.6,fi:0.5},{n:"морква",k:41,p:0.9,f:0.2,c:10,fi:2.8},
+  {n:"капуста білокачанна",k:25,p:1.3,f:0.1,c:5.8,fi:2.5},{n:"капуста пекінська",k:16,p:1.2,f:0.2,c:2.2,fi:1.2},
+  {n:"броколі",k:34,p:2.8,f:0.4,c:7,fi:2.6},{n:"перець болгарський",k:31,p:1,f:0.3,c:6,fi:2.1},
+  {n:"шпинат",k:23,p:2.9,f:0.4,c:3.6,fi:2.2},{n:"авокадо",k:160,p:2,f:15,c:9,fi:7},
+  {n:"горіхи волоські",k:654,p:15,f:65,c:14,fi:6.7},{n:"мигдаль",k:579,p:21,f:50,c:22,fi:12.5},
+  {n:"арахіс",k:567,p:26,f:49,c:16,fi:8.5},{n:"насіння соняшнику",k:584,p:21,f:51,c:20,fi:8.6},
+  {n:"насіння чіа",k:486,p:16.5,f:30.7,c:42.1,fi:34.4},{n:"насіння гарбуза",k:559,p:30.2,f:49.1,c:10.7,fi:6},
+  {n:"мед",k:304,p:0.3,f:0,c:82,fi:0.2},{n:"цукор",k:387,p:0,f:0,c:100,fi:0},{n:"шоколад чорний 70%",k:598,p:7,f:43,c:46,fi:10.9},
+  {n:"борщ",k:40,p:2,f:1.5,c:5,fi:1.5},{n:"котлета м'ясна",k:220,p:14,f:16,c:7,fi:0.5},{n:"піца",k:266,p:11,f:10,c:33,fi:2.3},
+  {n:"чай без цукру",k:1,p:0,f:0,c:0,fi:0},{n:"кава чорна",k:2,p:0.3,f:0,c:0,fi:0},
+  {n:"протеїн сироватковий",k:400,p:80,f:5,c:7,fi:0},
+  {n:"iso whey zero biotech (протеїн)",k:364,p:84,f:2,c:2.4,fi:0},
+  {n:"протеїновий напій zott шоколад",k:77,p:10.9,f:1.2,c:5.1,fi:0},
+  {n:"арахісова паста",k:588,p:25,f:50,c:20,fi:6},
+  {n:"горох варений",k:116,p:8,f:0.4,c:21,fi:8.3},{n:"квасоля варена",k:127,p:8.7,f:0.5,c:22,fi:7.4},
+  {n:"сочевиця варена",k:116,p:9,f:0.4,c:20,fi:7.9},{n:"нут варений",k:164,p:9,f:2.6,c:27,fi:7.6},
+  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},
+];
+
+var meals=[],sel=null,results=[],hi=-1,tmr=null;
+var customProducts=[];
+var M=[
+  {key:'k',lbl:'Ккал',unit:'ккал',color:'#e53935',g:'gk'},
+  {key:'p',lbl:'Білки',unit:'г',color:'#2563eb',g:'gp'},
+  {key:'f',lbl:'Жири',unit:'г',color:'#f59e0b',g:'gf'},
+  {key:'c',lbl:'Вугл.',unit:'г',color:'#16a34a',g:'gc'},
+  {key:'fi',lbl:'Кліт.',unit:'г',color:'#0891b2',g:'gfi'},
+];
+
+/* ── CUSTOM PRODUCTS ── */
+function loadCustomProducts(){
+  customProducts=JSON.parse(localStorage.getItem('bjv_custom')||'[]');
+}
+function saveCustomProducts(){
+  localStorage.setItem('bjv_custom',JSON.stringify(customProducts));
+}
+function getFullDB(){
+  return DB.concat(customProducts.map(function(p){return{n:p.n,k:p.k,p:p.p,f:p.f,c:p.c,fi:p.fi,custom:true};}));
+}
+function addCustomProduct(){
+  var name=document.getElementById('npName').value.trim();
+  var k=parseFloat(document.getElementById('npK').value)||0;
+  var p=parseFloat(document.getElementById('npP').value)||0;
+  var f=parseFloat(document.getElementById('npF').value)||0;
+  var c=parseFloat(document.getElementById('npC').value)||0;
+  var fi=parseFloat(document.getElementById('npFi').value)||0;
+  if(!name){document.getElementById('npName').focus();return;}
+  if(!k){document.getElementById('npK').focus();return;}
+  customProducts.push({n:name,k:k,p:p,f:f,c:c,fi:fi});
+  saveCustomProducts();
+  document.getElementById('npName').value='';
+  document.getElementById('npK').value='';
+  document.getElementById('npP').value='';
+  document.getElementById('npF').value='';
+  document.getElementById('npC').value='';
+  document.getElementById('npFi').value='';
+  var ok=document.getElementById('npOk');
+  ok.textContent='«'+name+'» додано!';
+  setTimeout(function(){ok.textContent='';},2500);
+  renderCustomList();
+  syncToCloud();
+}
+function deleteCustomProduct(i){
+  var name=customProducts[i].n;
+  customProducts.splice(i,1);
+  saveCustomProducts();
+  renderCustomList();
+  syncToCloud();
+}
+function renderCustomList(){
+  var el=document.getElementById('customList');
+  if(!customProducts.length){el.innerHTML='<div class="custom-empty">Ваших продуктів поки немає</div>';return;}
+  el.innerHTML='<div class="divider"></div><div style="font-size:12px;font-weight:500;color:#555;margin-bottom:8px">Мої продукти ('+customProducts.length+')</div>'
+    +customProducts.map(function(p,i){
+      return'<div class="custom-item">'
+        +'<div style="flex:1"><div class="custom-item-name">'+p.n+'</div>'
+        +'<div class="custom-item-macros">'+Math.round(p.k)+' ккал · Б'+p.p+' Ж'+p.f+' В'+p.c+' Кл'+p.fi+'</div></div>'
+        +'<button class="custom-del" onclick="deleteCustomProduct('+i+')">×</button>'
+        +'</div>';
+    }).join('');
+}
+
+/* ── CLOUD (JSONBin) ── */
+function getCloud(){return JSON.parse(localStorage.getItem('bjv_cloud')||'null');}
+function saveCloudCfg(cfg){localStorage.setItem('bjv_cloud',JSON.stringify(cfg));}
+function setSyncStatus(state,text){
+  var dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
+  if(!dot)return;
+  dot.className='sync-dot'+(state?' '+state:'');
+  txt.textContent=text||'';
+}
+async function setupCloud(){
+  var key=document.getElementById('cloudKey').value.trim();
+  var binId=document.getElementById('cloudBin').value.trim();
+  var status=document.getElementById('cloudStatus');
+  if(!key){status.textContent='Введіть API ключ';return;}
+  status.textContent='Підключаємось...';
+  try{
+    var url=binId?'https://api.jsonbin.io/v3/b/'+binId:'https://api.jsonbin.io/v3/b';
+    var method=binId?'PUT':'POST';
+    var res=await fetch(url,{method:method,headers:{'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Name':'bjv-tracker','X-Bin-Private':'true'},body:JSON.stringify(buildAllData())});
+    var data=await res.json();
+    if(data.metadata&&data.metadata.id){
+      saveCloudCfg({key:key,binId:data.metadata.id});
+      document.getElementById('cloudSetup').style.display='none';
+      document.getElementById('cloudConnected').style.display='block';
+      document.getElementById('binIdLabel').textContent='ID: '+data.metadata.id;
+      status.textContent='';
+      setSyncStatus('ok','Синхронізовано з хмарою');
+    }else{status.textContent='Помилка: '+(data.message||'невірний ключ');}
+  }catch(e){status.textContent='Помилка підключення';}
+}
+async function syncToCloud(){
+  var cfg=getCloud();if(!cfg)return;
+  setSyncStatus('loading','Зберігаємо...');
+  try{
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+cfg.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.key},body:JSON.stringify(buildAllData())});
+    var data=await res.json();
+    if(data.metadata)setSyncStatus('ok','Збережено в хмарі');
+    else setSyncStatus('err','Помилка запису');
+  }catch(e){setSyncStatus('err','Немає зв\'язку');}
+}
+async function syncFromCloud(showAlert){
+  var cfg=getCloud();if(!cfg)return;
+  setSyncStatus('loading','Завантажуємо...');
+  try{
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+cfg.binId+'/latest',{headers:{'X-Master-Key':cfg.key}});
+    var data=await res.json();
+    if(data.record){applyAllData(data.record);setSyncStatus('ok','Синхронізовано');if(showAlert)alert('Дані завантажено з хмари!');}
+    else setSyncStatus('err','Помилка читання');
+  }catch(e){setSyncStatus('err','Немає зв\'язку');}
+}
+function disconnectCloud(){
+  if(!confirm('Відключити хмарну синхронізацію?'))return;
+  localStorage.removeItem('bjv_cloud');
+  document.getElementById('cloudSetup').style.display='block';
+  document.getElementById('cloudConnected').style.display='none';
+  setSyncStatus('','');
+}
+function buildAllData(){
+  var days=[];
+  for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('bjv_20')){var d=JSON.parse(localStorage.getItem(k));if(d)days.push(d);}}
+  days.sort(function(a,b){return a.date.localeCompare(b.date);});
+  return{goals:JSON.parse(localStorage.getItem('bjv_goals')||'null'),days:days,customProducts:customProducts};
+}
+function applyAllData(data){
+  if(data.goals)localStorage.setItem('bjv_goals',JSON.stringify(data.goals));
+  if(data.days)data.days.forEach(function(d){if(d.date)localStorage.setItem('bjv_'+d.date,JSON.stringify(d));});
+  if(data.customProducts){customProducts=data.customProducts;saveCustomProducts();}
+  loadGoals();renderCustomList();
+  var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);
+}
+function initCloud(){
+  var cfg=getCloud();
+  if(cfg){
+    document.getElementById('cloudSetup').style.display='none';
+    document.getElementById('cloudConnected').style.display='block';
+    document.getElementById('binIdLabel').textContent='ID: '+cfg.binId;
+    document.getElementById('cloudKey').value=cfg.key;
+    document.getElementById('cloudBin').value=cfg.binId;
+    syncFromCloud(false);
+  }
+}
+
+/* ── CORE ── */
+function liso(){var t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
+function adate(){return document.getElementById('dayPicker').value||liso();}
+function updLbl(v){
+  var d=new Date(v+'T12:00:00');
+  document.getElementById('datelbl').textContent=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(v===liso()?' — сьогодні':'');
+  document.getElementById('mealSec').textContent='Що з\'їдено '+d.toLocaleDateString('uk-UA',{day:'numeric',month:'long'});
+}
+function onDateChange(v){meals=[];var s=JSON.parse(localStorage.getItem('bjv_'+v)||'null');if(s&&s.meals)meals=s.meals;updLbl(v);render();}
+function goToday(){var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);}
+function loadGoals(){var s=JSON.parse(localStorage.getItem('bjv_goals')||'null');if(s){document.getElementById('gk').value=s.k||2000;document.getElementById('gp').value=s.p||120;document.getElementById('gf').value=s.f||70;document.getElementById('gc').value=s.c||220;document.getElementById('gfi').value=s.fi||25;}}
+function saveGoals(){localStorage.setItem('bjv_goals',JSON.stringify({k:+document.getElementById('gk').value,p:+document.getElementById('gp').value,f:+document.getElementById('gf').value,c:+document.getElementById('gc').value,fi:+document.getElementById('gfi').value}));document.getElementById('goalsok').textContent='Збережено!';setTimeout(function(){document.getElementById('goalsok').textContent='';},2000);render();}
+function goals(){return{k:+document.getElementById('gk').value||2000,p:+document.getElementById('gp').value||120,f:+document.getElementById('gf').value||70,c:+document.getElementById('gc').value||220,fi:+document.getElementById('gfi').value||25};}
+function totals(a){var o={k:0,p:0,f:0,c:0,fi:0};(a||meals).forEach(function(m){M.forEach(function(x){o[x.key]+=m[x.key];});});return o;}
+function saveDay(){
+  var d=adate();localStorage.setItem('bjv_'+d,JSON.stringify({date:d,meals:meals,totals:totals()}));
+  var el=document.getElementById('savedok');el.textContent='Збережено: '+new Date(d+'T12:00:00').toLocaleDateString('uk-UA',{day:'numeric',month:'long'});
+  setTimeout(function(){el.textContent='';},2500);syncToCloud();
+}
+function exportData(){
+  var blob=new Blob([JSON.stringify(buildAllData(),null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='bjv-backup-'+liso()+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function importData(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){try{applyAllData(JSON.parse(e.target.result));alert('Імпортовано!');}catch(err){alert('Помилка файлу');}};
+  reader.readAsText(file);input.value='';
+}
+function getAllDays(){var days=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('bjv_20')){var d=JSON.parse(localStorage.getItem(k));if(d&&d.date)days.push(d);}}return days.sort(function(a,b){return b.date.localeCompare(a.date);});}
+function fmtDate(iso){return new Date(iso+'T12:00:00').toLocaleDateString('uk-UA',{weekday:'short',day:'numeric',month:'long'});}
+function miniSum(t,g){return M.map(function(m){var v=t[m.key]||0,pct=g[m.key]?v/g[m.key]*100:0,d=m.key==='k'?Math.round(v):v.toFixed(1);return'<div class="sc"><div class="sl">'+m.lbl+'</div><div class="sv">'+d+'</div><div class="su">'+m.unit+'</div><div class="ss">'+Math.round(pct)+'%</div><div class="pb"><div class="pf" style="width:'+Math.min(pct,100).toFixed(1)+'%;background:'+m.color+'"></div></div></div>';}).join('');}
+function render(){
+  var g=goals(),t=totals();
+  document.getElementById('sum').innerHTML=M.map(function(m){var v=t[m.key]||0,pct=g[m.key]?v/g[m.key]*100:0,d=m.key==='k'?Math.round(v):v.toFixed(1);return'<div class="sc"><div class="sl">'+m.lbl+'</div><div class="sv">'+d+'</div><div class="su">'+m.unit+'</div><div class="ss">'+Math.round(pct)+'%</div><div class="pb"><div class="pf" style="width:'+Math.min(pct,100).toFixed(1)+'%;background:'+m.color+'"></div></div></div>';}).join('');
+  var ml=document.getElementById('mlist');
+  if(!meals.length){ml.innerHTML='<div class="empty">Ще нічого не додано</div>';return;}
+  ml.innerHTML=meals.map(function(m,i){return'<div class="mi"><div class="mirow"><span class="min">'+m.name+'<span class="mig">'+m.grams+'г</span></span><button class="del" onclick="del('+i+')">×</button></div><div class="mim"><span class="mp"><span class="dot" style="background:#e53935"></span>'+Math.round(m.k)+' ккал</span><span class="mp"><span class="dot" style="background:#2563eb"></span>Б '+m.p.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#f59e0b"></span>Ж '+m.f.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#16a34a"></span>В '+m.c.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#0891b2"></span>Кл '+m.fi.toFixed(1)+'</span></div></div>';}).join('');
+}
+function renderHistory(){
+  var days=getAllDays(),g=goals();
+  if(!days.length){document.getElementById('histList').innerHTML='<div class="no-history">Ще немає збережених днів</div>';return;}
+  document.getElementById('histList').innerHTML=days.map(function(d){var t=d.totals||totals(d.meals);var foods=d.meals?d.meals.map(function(m){return'<div class="day-food-item"><span>'+m.name+' <span style="color:#bbb">'+m.grams+'г</span></span><span style="color:#888">'+Math.round(m.k)+' ккал</span></div>';}).join(''):'';return'<div class="day-card"><div class="day-card-head"><span class="day-date">'+fmtDate(d.date)+'</span><div class="day-actions"><button class="day-edit" onclick="editDay(\''+d.date+'\')">Ред.</button><button class="day-del" onclick="deleteDay(\''+d.date+'\')">✕</button></div></div><div class="day-summary">'+miniSum(t,g)+'</div><div class="day-food-list">'+foods+'</div></div>';}).join('');
+}
+function editDay(date){document.getElementById('dayPicker').value=date;onDateChange(date);showPage('today',document.querySelectorAll('.bnav-item')[0]);}
+function deleteDay(date){if(confirm('Видалити '+fmtDate(date)+'?')){localStorage.removeItem('bjv_'+date);renderHistory();fillCmp();syncToCloud();}}
+function fillCmp(){var days=getAllDays();var opts=days.map(function(d){return'<option value="'+d.date+'">'+fmtDate(d.date)+'</option>';}).join('');document.getElementById('cmpA').innerHTML=opts;document.getElementById('cmpB').innerHTML=opts;if(days.length>=2)document.getElementById('cmpB').selectedIndex=1;}
+function renderCompare(){
+  var a=document.getElementById('cmpA').value,b=document.getElementById('cmpB').value;
+  if(!a||!b||a===b){document.getElementById('cmpResult').innerHTML='<div class="no-history">Оберіть два різні дні</div>';return;}
+  var da=JSON.parse(localStorage.getItem('bjv_'+a)),db=JSON.parse(localStorage.getItem('bjv_'+b));
+  if(!da||!db){document.getElementById('cmpResult').innerHTML='<div class="no-history">Немає даних</div>';return;}
+  var ta=da.totals||totals(da.meals),tb=db.totals||totals(db.meals),g=goals();
+  var keys=['k','p','f','c','fi'],labels=['Ккал','Білки','Жири','Вугл.','Кліт.'];
+  var cx=130,cy=115,r=78;
+  var angs=keys.map(function(_,i){return(Math.PI*2/5)*i-Math.PI/2;});
+  function pv(key,t){return g[key]?Math.min((t[key]||0)/g[key],1.35):0;}
+  function pt(ang,ratio){return[cx+r*ratio*Math.cos(ang),cy+r*ratio*Math.sin(ang)];}
+  var grid='';
+  [0.25,0.5,0.75,1].forEach(function(f){grid+='<polygon points="'+angs.map(function(ang){var p=pt(ang,f);return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="#e8e8e3" stroke-width="0.5"/>';});
+  angs.forEach(function(ang,i){var p=pt(ang,1.18);grid+='<line x1="'+cx+'" y1="'+cy+'" x2="'+pt(ang,1)[0]+'" y2="'+pt(ang,1)[1]+'" stroke="#e8e8e3" stroke-width="0.5"/>';var anchor=Math.abs(Math.cos(ang))<0.15?'middle':(Math.cos(ang)>0?'start':'end');grid+='<text x="'+p[0]+'" y="'+(p[1]+4)+'" text-anchor="'+anchor+'" font-size="10" fill="#999">'+labels[i]+'</text>';});
+  var ptsA=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],ta));return p[0]+','+p[1];}).join(' ');
+  var ptsB=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],tb));return p[0]+','+p[1];}).join(' ');
+  var dotsA=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],ta));return'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#2563eb"/>';}).join('');
+  var dotsB=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],tb));return'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#e53935"/>';}).join('');
+  var radar='<svg viewBox="0 0 260 250" style="width:100%;max-width:280px;display:block;margin:0 auto">'+grid+'<polygon points="'+ptsA+'" fill="rgba(37,99,235,0.13)" stroke="#2563eb" stroke-width="2"/>'+dotsA+'<polygon points="'+ptsB+'" fill="rgba(229,57,53,0.10)" stroke="#e53935" stroke-width="2" stroke-dasharray="5,2"/>'+dotsB+'<rect x="12" y="222" width="12" height="3" fill="#2563eb" rx="1"/><text x="28" y="226" font-size="10" fill="#555">'+fmtDate(a)+'</text><rect x="12" y="236" width="12" height="3" fill="none" stroke="#e53935" stroke-width="2" stroke-dasharray="4,1"/><text x="28" y="240" font-size="10" fill="#555">'+fmtDate(b)+'</text></svg>';
+  function macroBar(t,color,label){var p=(t.p||0)*4,f=(t.f||0)*9,c=(t.c||0)*4,tot=p+f+c||1;var pp=Math.round(p/tot*100),fp=Math.round(f/tot*100),cp=100-pp-fp;return'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;color:'+color+';font-weight:500">'+label+'</span><span style="font-size:12px;color:#aaa">'+Math.round(t.k||0)+' ккал</span></div><div style="display:flex;height:22px;border-radius:8px;overflow:hidden;gap:1px"><div style="flex:'+pp+';background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(pp>12?pp+'%':'')+'</div><div style="flex:'+fp+';background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(fp>12?fp+'%':'')+'</div><div style="flex:'+cp+';background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(cp>12?cp+'%':'')+'</div></div><div style="display:flex;gap:12px;margin-top:4px"><span style="font-size:11px;color:#2563eb">Б '+pp+'%</span><span style="font-size:11px;color:#f59e0b">Ж '+fp+'%</span><span style="font-size:11px;color:#16a34a">В '+cp+'%</span></div></div>';}
+  var rows=M.map(function(m){var va=ta[m.key]||0,vb=tb[m.key]||0,diff=vb-va;var sa=m.key==='k'?Math.round(va):va.toFixed(1),sb=m.key==='k'?Math.round(vb):vb.toFixed(1);var ds=(diff>=0?'+':'')+(m.key==='k'?Math.round(diff):diff.toFixed(1));var better=m.key==='f'||m.key==='k'?diff<0:diff>0;var clr=diff===0?'#aaa':(better?'#16a34a':'#e53935');var arrow=diff===0?'—':(diff>0?'▲':'▼');var pctA=g[m.key]?Math.round(va/g[m.key]*100):0,pctB=g[m.key]?Math.round(vb/g[m.key]*100):0;var hitA=pctA>=85&&pctA<=115,hitB=pctB>=85&&pctB<=115;return'<tr style="border-bottom:1px solid #f5f5f2"><td style="padding:10px 6px;font-size:14px;color:#888">'+m.lbl+'</td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#2563eb">'+sa+'</span><span style="font-size:11px;color:#aaa"> '+m.unit+'</span> <span style="font-size:11px;background:'+(hitA?'#dcfce7':'#f5f5f2')+';color:'+(hitA?'#16a34a':'#aaa')+';padding:2px 5px;border-radius:4px">'+pctA+'%</span></td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#e53935">'+sb+'</span><span style="font-size:11px;color:#aaa"> '+m.unit+'</span> <span style="font-size:11px;background:'+(hitB?'#dcfce7':'#f5f5f2')+';color:'+(hitB?'#16a34a':'#aaa')+';padding:2px 5px;border-radius:4px">'+pctB+'%</span></td><td style="padding:10px 6px;font-size:14px;color:'+clr+';font-weight:500;white-space:nowrap">'+arrow+' '+ds+'</td></tr>';}).join('');
+  function foodList(ms,color){if(!ms||!ms.length)return'<div style="font-size:13px;color:#ccc;padding:8px 0">Немає даних</div>';var tot=ms.reduce(function(s,m){return s+m.k;},0);return ms.map(function(m){var pct=Math.round(m.k/tot*100);return'<div style="padding:8px 0;border-bottom:1px solid #f5f5f2"><div style="display:flex;justify-content:space-between"><span style="font-size:14px">'+m.name+'</span><span style="font-size:13px;font-weight:500;color:'+color+'">'+Math.round(m.k)+'</span></div><div style="display:flex;justify-content:space-between;margin-top:2px"><span style="font-size:11px;color:#bbb">'+m.grams+'г · Б'+m.p.toFixed(1)+' Ж'+m.f.toFixed(1)+' В'+m.c.toFixed(1)+'</span><span style="font-size:11px;color:#ddd">'+pct+'%</span></div></div>';}).join('');}
+  document.getElementById('cmpResult').innerHTML=
+    '<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:14px">Радар (% від цілі)</div>'+radar+'</div>'
+    +'<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:12px">Розподіл калорій</div>'+macroBar(ta,'#2563eb',fmtDate(a))+macroBar(tb,'#e53935',fmtDate(b))+'</div>'
+    +'<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:10px">Деталі <span style="font-weight:400;color:#aaa;font-size:11px">зелений = 85–115% від цілі</span></div><table style="width:100%;border-collapse:collapse"><thead><tr style="border-bottom:1px solid #eee"><th style="font-size:11px;color:#aaa;text-align:left;padding:5px 6px"></th><th style="font-size:11px;color:#2563eb;text-align:left;padding:5px 6px">'+fmtDate(a)+'</th><th style="font-size:11px;color:#e53935;text-align:left;padding:5px 6px">'+fmtDate(b)+'</th><th style="font-size:11px;color:#aaa;text-align:left;padding:5px 6px">Δ</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="cmp-food-grid"><div class="box"><div style="font-size:13px;font-weight:500;color:#2563eb;margin-bottom:10px">'+fmtDate(a)+'</div>'+foodList(da.meals,'#2563eb')+'</div><div class="box"><div style="font-size:13px;font-weight:500;color:#e53935;margin-bottom:10px">'+fmtDate(b)+'</div>'+foodList(db.meals,'#e53935')+'</div></div>';
+}
+
+/* ── SEARCH ── */
+function showDD(q){
+  var dd=document.getElementById('dd');
+  if(!q){dd.style.display='none';results=[];return;}
+  var fullDB=getFullDB();
+  results=fullDB.filter(function(x){return x.n.toLowerCase().indexOf(q.toLowerCase())>=0;}).slice(0,8);
+  if(!results.length){dd.style.display='none';return;}
+  hi=-1;
+  dd.innerHTML=results.map(function(it,i){
+    return'<div class="ddi'+(it.custom?' ddi-custom':'')+'" id="ri'+i+'">'
+      +'<span class="ddn">'+(it.custom?'★ ':'')+it.n+'</span>'
+      +'<span class="ddh">'+Math.round(it.k)+' ккал</span>'
+      +'</div>';
+  }).join('');
+  dd.style.display='block';
+  for(var i=0;i<results.length;i++){(function(idx){
+    document.getElementById('ri'+idx).addEventListener('mousedown',function(e){e.preventDefault();pick(idx);});
+    document.getElementById('ri'+idx).addEventListener('touchend',function(e){e.preventDefault();pick(idx);});
+  })(i);}
+}
+function pick(i){
+  if(i<0||i>=results.length)return;
+  sel=results[i];
+  document.getElementById('siwrap').style.display='none';
+  var badgeEl=document.getElementById('badge');
+  badgeEl.className='badge'+(sel.custom?' badge-custom':'');
+  document.getElementById('btxt').textContent=sel.n+' · '+Math.round(sel.k)+' ккал/100г';
+  badgeEl.style.display='inline-flex';
+  document.getElementById('dd').style.display='none';
+  setTimeout(function(){document.getElementById('gi').focus();},30);
+}
+function clearSel(){sel=null;results=[];hi=-1;document.getElementById('badge').style.display='none';document.getElementById('siwrap').style.display='';document.getElementById('si').value='';document.getElementById('dd').style.display='none';}
+function addMeal(){
+  var g=parseFloat(document.getElementById('gi').value),err=document.getElementById('err');
+  if(!sel){err.textContent='Спочатку оберіть продукт зі списку';return;}
+  if(!g||g<=0){err.textContent='Введіть вагу в грамах';return;}
+  err.textContent='';var r=g/100;
+  meals.push({name:sel.n,grams:g,k:sel.k*r,p:sel.p*r,f:sel.f*r,c:sel.c*r,fi:sel.fi*r});
+  clearSel();document.getElementById('gi').value='';render();
+}
+function del(i){meals.splice(i,1);render();}
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.bnav-item').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('page-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  if(name==='history')renderHistory();
+  if(name==='compare')fillCmp();
+  if(name==='settings')renderCustomList();
+}
+
+document.getElementById('bx').addEventListener('click',clearSel);
+document.addEventListener('touchstart',function(e){if(!e.target.closest('.si-wrap')&&!e.target.closest('.dd'))document.getElementById('dd').style.display='none';});
+document.addEventListener('mousedown',function(e){if(!e.target.closest('.si-wrap')&&!e.target.closest('.dd'))document.getElementById('dd').style.display='none';});
+document.getElementById('si').addEventListener('input',function(){sel=null;clearTimeout(tmr);var q=this.value.trim();tmr=setTimeout(function(){showDD(q);},200);});
+document.getElementById('si').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(hi>=0)pick(hi);else if(results.length)pick(0);}if(e.key==='Escape')document.getElementById('dd').style.display='none';});
+document.getElementById('gi').addEventListener('keydown',function(e){if(e.key==='Enter')addMeal();});
+
+var t=liso();
+document.getElementById('dayPicker').value=t;
+loadGoals();
+loadCustomProducts();
+renderCustomList();
+onDateChange(t);
+initCloud();
+</script>
+</body>
+</html>
