@@ -458,7 +458,7 @@ function showDD(q){
     document.getElementById('ri'+idx).addEventListener('touchend',function(e){e.preventDefault();pick(idx);});
   })(i);}
 }
-function pick(i){if(i<0||i>=results.length)return;sel=results[i];document.getElementById('siwrap').style.display='none';document.getElementById('btxt').textContent=sel.n+' · '+Math.round(sel.k)+' ккал/100г';document.getElementById('badge').style.display='inline-flex';document.getElementById('dd').style.display='none';setTimeout(function(){document.getElementById('gi').focus();},30);}
+function pick(i){if(i<0||i>=results.length)return;sel=results[i];document.getElementById('siwrap').style.display='none';document.getElementById('btxt').textContent=sel.n+' · '+Math.round(sel.k)+' ккал/100г';document.getElementById('badge').style.display='inline-flex';document.getElementById('dd').style.display='none';setTimeout(function(){document.getElementById('gi').focus();},30);},{n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9}
 function clearSel(){sel=null;results=[];hi=-1;document.getElementById('badge').style.display='none';document.getElementById('siwrap').style.display='';document.getElementById('si').value='';document.getElementById('dd').style.display='none';}
 function addMeal(){var g=parseFloat(document.getElementById('gi').value),err=document.getElementById('err');if(!sel){err.textContent='Спочатку оберіть продукт зі списку';return;}if(!g||g<=0){err.textContent='Введіть вагу в грамах';return;}err.textContent='';var r=g/100;meals.push({name:sel.n,grams:g,k:sel.k*r,p:sel.p*r,f:sel.f*r,c:sel.c*r,fi:sel.fi*r});clearSel();document.getElementById('gi').value='';render();}
 function del(i){meals.splice(i,1);render();}
