@@ -403,6 +403,7 @@ function renderCompare(){
 function showDD(q){
   var dd=document.getElementById('dd');
   if(!q){dd.style.display='none';results=[];return;}
+  if(typeof DB==='undefined'){dd.style.display='none';return;}
   results=DB.filter(function(x){return x.n.toLowerCase().indexOf(q.toLowerCase())>=0;}).slice(0,7);
   if(!results.length){dd.style.display='none';return;}
   hi=-1;
@@ -433,17 +434,24 @@ document.getElementById('si').addEventListener('input',function(){sel=null;clear
 document.getElementById('si').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(hi>=0)pick(hi);else if(results.length)pick(0);}if(e.key==='Escape'){document.getElementById('dd').style.display='none';}});
 document.getElementById('gi').addEventListener('keydown',function(e){if(e.key==='Enter')addMeal();});
 
-var _bjvInit = function(){
+// Load products.js synchronously via XHR
+(function(){
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'products.js', false); // false = synchronous
+    xhr.send();
+    if(xhr.status === 200) {
+      var script = document.createElement('script');
+      script.text = xhr.responseText;
+      document.head.appendChild(script);
+    }
+  } catch(e) {}
   var t=liso();
   document.getElementById('dayPicker').value=t;
   loadGoals();
   onDateChange(t);
   initCloud();
-};
-var _s = document.createElement('script');
-_s.src = 'products.js';
-_s.onload = _bjvInit;
-document.head.appendChild(_s);
+})();
 </script>
 </body>
 </html>
