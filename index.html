@@ -189,15 +189,15 @@ input[type=date]:focus{border-color:#4a90e2}
 
   <!-- CLOUD SYNC -->
   <div class="cloud-box">
-    <div class="cloud-title">☁️ Синхронізація Google Sheets</div>
-    <div class="cloud-desc">Дані автоматично зберігаються в Google Таблицю при кожному збереженні дня. Доступні з будь-якого пристрою.</div>
+    <div class="cloud-title">☁️ Хмарна синхронізація</div>
+    <div class="cloud-desc">Дані автоматично зберігаються при кожному збереженні дня. Доступні з будь-якого пристрою.</div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
       <div class="sync-dot ok"></div>
-      <span style="font-size:13px;color:#16a34a;font-weight:500">Підключено до Google Sheets</span>
+      <span style="font-size:13px;color:#16a34a;font-weight:500">Підключено ✓</span>
     </div>
-    <button class="cloud-btn" onclick="syncFromCloud(true)" style="background:#16a34a">⌇ Завантажити з хмари</button>
+    <button class="cloud-btn" onclick="syncFromCloud(true)" style="background:#16a34a">⬇ Завантажити з хмари</button>
     <div class="divider"></div>
-    <button class="export-btn" onclick="syncToCloud()">↑ Зберегти в хмару зараз</button>
+    <button class="export-btn" onclick="syncToCloud()">↑ Зберегти зараз</button>
   </div>
 
   <!-- GOALS -->
@@ -281,8 +281,9 @@ var M=[
   {key:'fi',lbl:'Кліт.',unit:'г',color:'#0891b2',g:'gfi'},
 ];
 
-/* ── CLOUD (Google Sheets) ── */
-const GS_URL = 'https://script.google.com/macros/s/AKfycbzukb2UTurs0NZOuN3WfFJUPy5scZB9mgo7EzeIpZeOcFSs1bzN4mwiMlZeQNPA7b6z/exec';
+/* ── CLOUD (JSONBin) ── */
+const JB_KEY = '$2a$10$enRyreZu5lf0t8S6JU0APe146uyA/zRbgLFfrPW6/b5FvLYhpOLR6';
+const JB_BIN = '69c27ebab7ec241ddc9acab6';
 
 function setSyncStatus(state,text){
   var dot=document.getElementById('syncDot');
@@ -295,28 +296,30 @@ function setSyncStatus(state,text){
 async function syncToCloud(){
   setSyncStatus('loading','Зберігаємо...');
   try{
-    await fetch(GS_URL,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'save',payload:buildAllData()})
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JB_KEY},
+      body:JSON.stringify(buildAllData())
     });
-    setSyncStatus('ok','Збережено ✓');
+    var d=await res.json();
+    if(d.metadata){setSyncStatus('ok','Збережено ✓');}
+    else{setSyncStatus('err','Помилка');}
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 
 async function syncFromCloud(showAlert){
   setSyncStatus('loading','Завантажуємо...');
   try{
-    var res=await fetch(GS_URL+'?t='+Date.now());
-    var text=await res.text();
-    var data=text?JSON.parse(text):{};
-    if(data&&data.days){
-      applyAllData(data);
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN+'/latest',{
+      headers:{'X-Master-Key':JB_KEY}
+    });
+    var d=await res.json();
+    if(d.record&&d.record.days){
+      applyAllData(d.record);
       setSyncStatus('ok','Синхронізовано ✓');
-      if(showAlert)alert('Дані завантажено з Google Sheets!');
+      if(showAlert)alert('Дані завантажено!');
     }else{
-      setSyncStatus('ok','Готово');
+      setSyncStatus('ok','');
     }
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
