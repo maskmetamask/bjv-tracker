@@ -324,6 +324,31 @@ async function syncFromCloud(showAlert){
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 
+
+function buildAllData(){
+  var days=[];
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k&&k.startsWith('bjv_20')){
+      var d=JSON.parse(localStorage.getItem(k));
+      if(d)days.push(d);
+    }
+  }
+  days.sort(function(a,b){return a.date.localeCompare(b.date);});
+  return {goals:JSON.parse(localStorage.getItem('bjv_goals')||'null'),days:days};
+}
+
+function applyAllData(data){
+  if(data.goals)localStorage.setItem('bjv_goals',JSON.stringify(data.goals));
+  if(data.days)data.days.forEach(function(d){
+    if(d.date)localStorage.setItem('bjv_'+d.date,JSON.stringify(d));
+  });
+  loadGoals();
+  var t=liso();
+  document.getElementById('dayPicker').value=t;
+  onDateChange(t);
+}
+
 function initCloud(){
   syncFromCloud(false);
 }
