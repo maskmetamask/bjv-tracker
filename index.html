@@ -225,20 +225,6 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <script>
-(function(){
-  var s = document.createElement('script');
-  s.src = 'products.js';
-  s.onload = function(){
-    var t=liso();
-    document.getElementById('dayPicker').value=t;
-    loadGoals();
-    onDateChange(t);
-    initCloud();
-  };
-  document.head.appendChild(s);
-})();
-</script>
-<script>
 // Products loaded from products.js
 
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
@@ -447,7 +433,16 @@ document.getElementById('si').addEventListener('input',function(){sel=null;clear
 document.getElementById('si').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(hi>=0)pick(hi);else if(results.length)pick(0);}if(e.key==='Escape'){document.getElementById('dd').style.display='none';}});
 document.getElementById('gi').addEventListener('keydown',function(e){if(e.key==='Enter')addMeal();});
 
-// init called after products.js loads
+fetch('products.js')
+  .then(function(r){return r.text();})
+  .then(function(code){
+    eval(code);
+    var t=liso();
+    document.getElementById('dayPicker').value=t;
+    loadGoals();
+    onDateChange(t);
+    initCloud();
+  });
 </script>
 </body>
 </html>
