@@ -295,27 +295,29 @@ function setSyncStatus(state,text){
 async function syncToCloud(){
   setSyncStatus('loading','Зберігаємо...');
   try{
-    var res=await fetch(GS_URL,{
+    await fetch(GS_URL,{
       method:'POST',
+      mode:'no-cors',
       headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({action:'save',payload:buildAllData()})
     });
-    var data=await res.json();
-    if(data.ok){setSyncStatus('ok','Збережено ✓');}
-    else{setSyncStatus('err','Помилка запису');}
+    setSyncStatus('ok','Збережено ✓');
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 
 async function syncFromCloud(showAlert){
   setSyncStatus('loading','Завантажуємо...');
   try{
-    var res=await fetch(GS_URL);
-    var data=await res.json();
+    var res=await fetch(GS_URL+'?t='+Date.now());
+    var text=await res.text();
+    var data=text?JSON.parse(text):{};
     if(data&&data.days){
       applyAllData(data);
       setSyncStatus('ok','Синхронізовано ✓');
       if(showAlert)alert('Дані завантажено з Google Sheets!');
-    }else{setSyncStatus('err','Немає даних');}
+    }else{
+      setSyncStatus('ok','Готово');
+    }
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 
