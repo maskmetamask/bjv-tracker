@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -116,6 +117,7 @@ input[type=date]:focus{border-color:#4a90e2}
 #importFile{display:none}
 .import-note{font-size:11px;color:#bbb;text-align:center;margin-top:6px;line-height:1.5}
 </style>
+
 </head>
 <body>
 
@@ -135,6 +137,7 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- TODAY -->
+
 <div class="page active" id="page-today">
   <div class="day-row">
     <div class="date-input-wrap">
@@ -166,12 +169,14 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- HISTORY -->
+
 <div class="page" id="page-history">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Історія</h2>
   <div id="histList"></div>
 </div>
 
 <!-- COMPARE -->
+
 <div class="page" id="page-compare">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:14px">Порівняння</h2>
   <div class="cmp-controls">
@@ -184,10 +189,12 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- SETTINGS -->
+
 <div class="page" id="page-settings">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Налаштування</h2>
 
   <!-- CLOUD SYNC -->
+
   <div class="cloud-box">
     <div class="cloud-title">☁️ Хмарна синхронізація</div>
     <div class="cloud-desc">Дані автоматично зберігаються при кожному збереженні дня. Доступні з будь-якого пристрою.</div>
@@ -201,6 +208,7 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- GOALS -->
+
   <div class="settings-section">
     <div class="settings-title">Денні цілі</div>
     <div class="goals-grid">
@@ -215,6 +223,7 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- BACKUP -->
+
   <div class="settings-section">
     <div class="settings-title">Резервна копія</div>
     <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
@@ -269,7 +278,7 @@ var DB=[
   {n:"арахісова паста",k:588,p:25,f:50,c:20,fi:6},
   {n:"горох варений",k:116,p:8,f:0.4,c:21,fi:8.3},{n:"квасоля варена",k:127,p:8.7,f:0.5,c:22,fi:7.4},
   {n:"сочевиця варена",k:116,p:9,f:0.4,c:20,fi:7.9},{n:"нут варений",k:164,p:9,f:2.6,c:27,fi:7.6},
-  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},{n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9},{n:"тости mulino bianco цільнозернові",k:384,p:13.5,f:6,c:63,fi:8},
+  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},{n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9},{n:"тости mulino bianco цільнозернові",k:384,p:13.5,f:6,c:63,fi:8},{n:"тістечко nesquik з молочною начинкою",k:404,p:7.2,f:21.7,c:44.5,fi:0.5},
 ];
 
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
@@ -484,5 +493,6 @@ loadGoals();
 onDateChange(t);
 initCloud();
 </script>
+
 </body>
 </html>
