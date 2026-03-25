@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -75,7 +74,7 @@ input[type=date]:focus{border-color:#4a90e2}
 .saved-ok{font-size:13px;color:#16a34a;text-align:center;margin-top:8px;min-height:20px}
 .day-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:10px;border:1px solid #e8e8e3}
 .day-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.day-date{font-size:16px;font-weight:600}
+.day-date{font-size:16px;font-weight:600;color:#1a1a1a}
 .day-actions{display:flex;gap:6px}
 .day-edit{background:none;border:1px solid #ddd;cursor:pointer;font-size:13px;color:#555;padding:6px 12px;border-radius:8px;min-height:36px}
 .day-del{background:none;border:none;cursor:pointer;font-size:13px;color:#aaa;padding:6px 10px;border-radius:8px;min-height:36px}
@@ -93,17 +92,17 @@ input[type=date]:focus{border-color:#4a90e2}
 
 /* SETTINGS */
 .settings-section{margin-bottom:20px}
-.settings-title{font-size:14px;font-weight:600;color:#555;margin-bottom:10px}
+.settings-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px}
 .goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .goal-item{background:#fff;border-radius:12px;padding:12px;border:1px solid #e8e8e3}
-.goal-lbl{font-size:12px;color:#888;margin-bottom:6px}
+.goal-lbl{font-size:12px;color:#555;margin-bottom:6px}
 .goal-item input{width:100%;padding:8px 10px;font-size:16px;border:1.5px solid #ddd;border-radius:8px;outline:none;-webkit-appearance:none}
 .sv-btn{width:100%;padding:13px;font-size:16px;font-weight:600;background:#1a1a1a;color:#fff;border:none;border-radius:12px;cursor:pointer;min-height:50px;margin-bottom:8px}
 .ok-msg{font-size:13px;color:#16a34a;text-align:center;min-height:20px;margin-bottom:4px}
 
 /* CLOUD SETTINGS */
 .cloud-box{background:#fff;border-radius:16px;padding:16px;border:1px solid #e8e8e3;margin-bottom:12px}
-.cloud-title{font-size:14px;font-weight:600;color:#555;margin-bottom:6px}
+.cloud-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
 .cloud-desc{font-size:12px;color:#888;margin-bottom:12px;line-height:1.5}
 .cloud-input{width:100%;padding:11px 14px;font-size:14px;border:1.5px solid #ddd;border-radius:10px;outline:none;margin-bottom:8px;background:#fafaf8;-webkit-appearance:none}
 .cloud-input:focus{border-color:#4a90e2;background:#fff}
@@ -117,7 +116,6 @@ input[type=date]:focus{border-color:#4a90e2}
 #importFile{display:none}
 .import-note{font-size:11px;color:#bbb;text-align:center;margin-top:6px;line-height:1.5}
 </style>
-
 </head>
 <body>
 
@@ -137,7 +135,6 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- TODAY -->
-
 <div class="page active" id="page-today">
   <div class="day-row">
     <div class="date-input-wrap">
@@ -169,16 +166,14 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- HISTORY -->
-
 <div class="page" id="page-history">
-  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Історія</h2>
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;color:#1a1a1a">Історія</h2>
   <div id="histList"></div>
 </div>
 
 <!-- COMPARE -->
-
 <div class="page" id="page-compare">
-  <h2 style="font-size:18px;font-weight:600;margin-bottom:14px">Порівняння</h2>
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:14px;color:#1a1a1a">Порівняння</h2>
   <div class="cmp-controls">
     <div class="cmp-row"><select id="cmpA"></select></div>
     <div style="text-align:center;font-size:13px;color:#aaa">vs</div>
@@ -189,12 +184,10 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- SETTINGS -->
-
 <div class="page" id="page-settings">
-  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Налаштування</h2>
+  <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;color:#1a1a1a">Налаштування</h2>
 
   <!-- CLOUD SYNC -->
-
   <div class="cloud-box">
     <div class="cloud-title">☁️ Хмарна синхронізація</div>
     <div class="cloud-desc">Дані автоматично зберігаються при кожному збереженні дня. Доступні з будь-якого пристрою.</div>
@@ -208,7 +201,6 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- GOALS -->
-
   <div class="settings-section">
     <div class="settings-title">Денні цілі</div>
     <div class="goals-grid">
@@ -223,7 +215,6 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- BACKUP -->
-
   <div class="settings-section">
     <div class="settings-title">Резервна копія</div>
     <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
@@ -292,7 +283,6 @@ var DB=[
 {n:"йогурт bakoma men skyr ягоди",k:82,p:7,f:2,c:8.8,fi:0},
 ];
 </script>
-
 <script>
 // Products loaded from products.js
 
@@ -428,13 +418,13 @@ function render(){
   document.getElementById('sum').innerHTML=M.map(function(m){var v=t[m.key]||0,pct=g[m.key]?v/g[m.key]*100:0,d=m.key==='k'?Math.round(v):v.toFixed(1);return'<div class="sc"><div class="sl">'+m.lbl+'</div><div class="sv">'+d+'</div><div class="su">'+m.unit+'</div><div class="ss">'+Math.round(pct)+'%</div><div class="pb"><div class="pf" style="width:'+Math.min(pct,100).toFixed(1)+'%;background:'+m.color+'"></div></div></div>';}).join('');
   var ml=document.getElementById('mlist');
   if(!meals.length){ml.innerHTML='<div class="empty">Ще нічого не додано</div>';return;}
-  ml.innerHTML=meals.map(function(m,i){return'<div class="mi"><div class="mirow"><span class="min">'+m.name+'<span class="mig">'+m.grams+'г</span></span><button class="del" onclick="del('+i+')">×</button></div><div class="mim"><span class="mp"><span class="dot" style="background:#e53935"></span>'+Math.round(m.k)+' ккал</span><span class="mp"><span class="dot" style="background:#2563eb"></span>Б '+m.p.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#f59e0b"></span>Ж '+m.f.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#16a34a"></span>В '+m.c.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#0891b2"></span>Кл '+m.fi.toFixed(1)+'</span></div></div>';}).join('');
+  ml.innerHTML=meals.slice().reverse().map(function(m,i){var realIdx=meals.length-1-i;return'<div class="mi"><div class="mirow"><span class="min">'+m.name+'<span class="mig">'+m.grams+'г</span></span><button class="del" onclick="del('+realIdx+')">×</button></div><div class="mim"><span class="mp"><span class="dot" style="background:#e53935"></span>'+Math.round(m.k)+' ккал</span><span class="mp"><span class="dot" style="background:#2563eb"></span>Б '+m.p.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#f59e0b"></span>Ж '+m.f.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#16a34a"></span>В '+m.c.toFixed(1)+'</span><span class="mp"><span class="dot" style="background:#0891b2"></span>Кл '+m.fi.toFixed(1)+'</span></div></div>';}).join('');
 }
 
 function renderHistory(){
   var days=getAllDays(),g=goals();
   if(!days.length){document.getElementById('histList').innerHTML='<div class="no-history">Ще немає збережених днів</div>';return;}
-  document.getElementById('histList').innerHTML=days.map(function(d){var t=d.totals||totals(d.meals);var foods=d.meals?d.meals.map(function(m){return'<div class="day-food-item"><span>'+m.name+' <span style="color:#bbb">'+m.grams+'г</span></span><span style="color:#888">'+Math.round(m.k)+' ккал</span></div>';}).join(''):'';return'<div class="day-card"><div class="day-card-head"><span class="day-date">'+fmtDate(d.date)+'</span><div class="day-actions"><button class="day-edit" onclick="editDay(\''+d.date+'\')">Ред.</button><button class="day-del" onclick="deleteDay(\''+d.date+'\')">✕</button></div></div><div class="day-summary">'+miniSum(t,g)+'</div><div class="day-food-list">'+foods+'</div></div>';}).join('');
+  document.getElementById('histList').innerHTML=days.map(function(d){var t=d.totals||totals(d.meals);var foods=d.meals?d.meals.slice().sort(function(a,b){return b.k-a.k;}).map(function(m){return'<div style="padding:6px 0;border-bottom:1px solid #f5f5f2"><div style="display:flex;justify-content:space-between"><span style="font-size:15px;font-weight:500;color:#1a1a1a">'+m.name+' <span style="color:#bbb;font-weight:400">'+m.grams+'г</span></span><span style="font-size:13px;font-weight:500;color:#1a1a1a">'+Math.round(m.k)+' ккал</span></div><div style="display:flex;gap:10px;margin-top:3px"><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#2563eb;margin-right:3px"></span>Б '+m.p.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f59e0b;margin-right:3px"></span>Ж '+m.f.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#16a34a;margin-right:3px"></span>В '+m.c.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#0891b2;margin-right:3px"></span>Кл '+m.fi.toFixed(1)+'</span></div></div>';}).join(''):'';return'<div class="day-card"><div class="day-card-head"><span class="day-date">'+fmtDate(d.date)+'</span><div class="day-actions"><button class="day-edit" onclick="editDay(\''+d.date+'\')">Ред.</button><button class="day-del" onclick="deleteDay(\''+d.date+'\')">✕</button></div></div><div class="day-summary">'+miniSum(t,g)+'</div><div class="day-food-list">'+foods+'</div></div>';}).join('');
 }
 function editDay(date){document.getElementById('dayPicker').value=date;onDateChange(date);showPage('today',document.querySelectorAll('.bnav-item')[0]);}
 function deleteDay(date){if(confirm('Видалити '+fmtDate(date)+'?')){localStorage.removeItem('bjv_'+date);renderHistory();fillCmp();syncToCloud();}}
@@ -459,11 +449,11 @@ function renderCompare(){
   var dotsA=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],ta));return'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#2563eb"/>';}).join('');
   var dotsB=angs.map(function(ang,i){var p=pt(ang,pv(keys[i],tb));return'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#e53935"/>';}).join('');
   var radar='<svg viewBox="0 0 260 250" style="width:100%;max-width:280px;display:block;margin:0 auto">'+grid+'<polygon points="'+ptsA+'" fill="rgba(37,99,235,0.13)" stroke="#2563eb" stroke-width="2"/>'+dotsA+'<polygon points="'+ptsB+'" fill="rgba(229,57,53,0.10)" stroke="#e53935" stroke-width="2" stroke-dasharray="5,2"/>'+dotsB+'<rect x="12" y="222" width="12" height="3" fill="#2563eb" rx="1"/><text x="28" y="226" font-size="10" fill="#555">'+fmtDate(a)+'</text><rect x="12" y="236" width="12" height="3" fill="none" stroke="#e53935" stroke-width="2" stroke-dasharray="4,1"/><text x="28" y="240" font-size="10" fill="#555">'+fmtDate(b)+'</text></svg>';
-  function macroBar(t,color,label){var p=(t.p||0)*4,f=(t.f||0)*9,c=(t.c||0)*4,tot=p+f+c||1;var pp=Math.round(p/tot*100),fp=Math.round(f/tot*100),cp=100-pp-fp;return'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;color:'+color+';font-weight:500">'+label+'</span><span style="font-size:12px;color:#aaa">'+Math.round(t.k||0)+' ккал</span></div><div style="display:flex;height:22px;border-radius:8px;overflow:hidden;gap:1px"><div style="flex:'+pp+';background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(pp>12?pp+'%':'')+'</div><div style="flex:'+fp+';background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(fp>12?fp+'%':'')+'</div><div style="flex:'+cp+';background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px">'+(cp>12?cp+'%':'')+'</div></div><div style="display:flex;gap:12px;margin-top:4px"><span style="font-size:11px;color:#2563eb">Б '+pp+'%</span><span style="font-size:11px;color:#f59e0b">Ж '+fp+'%</span><span style="font-size:11px;color:#16a34a">В '+cp+'%</span></div></div>';}
-  var rows=M.map(function(m){var va=ta[m.key]||0,vb=tb[m.key]||0,diff=vb-va;var sa=m.key==='k'?Math.round(va):va.toFixed(1),sb=m.key==='k'?Math.round(vb):vb.toFixed(1);var ds=(diff>=0?'+':'')+(m.key==='k'?Math.round(diff):diff.toFixed(1));var better=m.key==='f'||m.key==='k'?diff<0:diff>0;var clr=diff===0?'#aaa':(better?'#16a34a':'#e53935');var arrow=diff===0?'—':(diff>0?'▲':'▼');var pctA=g[m.key]?Math.round(va/g[m.key]*100):0,pctB=g[m.key]?Math.round(vb/g[m.key]*100):0;var hitA=pctA>=85&&pctA<=115,hitB=pctB>=85&&pctB<=115;return'<tr style="border-bottom:1px solid #f5f5f2"><td style="padding:10px 6px;font-size:14px;color:#888">'+m.lbl+'</td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#2563eb">'+sa+'</span><span style="font-size:11px;color:#aaa"> '+m.unit+'</span> <span style="font-size:11px;background:'+(hitA?'#dcfce7':'#f5f5f2')+';color:'+(hitA?'#16a34a':'#aaa')+';padding:2px 5px;border-radius:4px">'+pctA+'%</span></td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#e53935">'+sb+'</span><span style="font-size:11px;color:#aaa"> '+m.unit+'</span> <span style="font-size:11px;background:'+(hitB?'#dcfce7':'#f5f5f2')+';color:'+(hitB?'#16a34a':'#aaa')+';padding:2px 5px;border-radius:4px">'+pctB+'%</span></td><td style="padding:10px 6px;font-size:14px;color:'+clr+';font-weight:500;white-space:nowrap">'+arrow+' '+ds+'</td></tr>';}).join('');
-  function foodList(ms,color){if(!ms||!ms.length)return'<div style="font-size:13px;color:#ccc;padding:8px 0">Немає даних</div>';var tot=ms.reduce(function(s,m){return s+m.k;},0);return ms.map(function(m){var pct=Math.round(m.k/tot*100);return'<div style="padding:8px 0;border-bottom:1px solid #f5f5f2"><div style="display:flex;justify-content:space-between"><span style="font-size:14px">'+m.name+'</span><span style="font-size:13px;font-weight:500;color:'+color+'">'+Math.round(m.k)+'</span></div><div style="display:flex;justify-content:space-between;margin-top:2px"><span style="font-size:11px;color:#bbb">'+m.grams+'г · Б'+m.p.toFixed(1)+' Ж'+m.f.toFixed(1)+' В'+m.c.toFixed(1)+'</span><span style="font-size:11px;color:#ddd">'+pct+'%</span></div></div>';}).join('');}
+  function macroBar(t,color,label){var p=(t.p||0)*4,f=(t.f||0)*9,c=(t.c||0)*4,tot=p+f+c||1;var pp=Math.round(p/tot*100),fp=Math.round(f/tot*100),cp=100-pp-fp;var sp=t.p?t.p.toFixed(1)+'г':0,sf=t.f?t.f.toFixed(1)+'г':0,sc=t.c?t.c.toFixed(1)+'г':0;return'<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:'+color+';font-weight:500">'+label+'</span><span style="font-size:12px;color:#aaa">'+Math.round(t.k||0)+' ккал</span></div><div style="display:flex;height:26px;border-radius:8px;overflow:hidden;gap:1px"><div style="flex:'+pp+';background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px;gap:3px">'+(pp>8?'<span style="font-weight:500">Б</span><span>'+sp+' ('+pp+'%)</span>':'')+'</div><div style="flex:'+fp+';background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px;gap:3px">'+(fp>8?'<span style="font-weight:500">Ж</span><span>'+sf+' ('+fp+'%)</span>':'')+'</div><div style="flex:'+cp+';background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;min-width:2px;gap:3px">'+(cp>8?'<span style="font-weight:500">В</span><span>'+sc+' ('+cp+'%)</span>':'')+'</div></div></div>';}
+  var rows=M.map(function(m){var va=ta[m.key]||0,vb=tb[m.key]||0,diff=va-vb;var sa=m.key==='k'?Math.round(va):va.toFixed(1),sb=m.key==='k'?Math.round(vb):vb.toFixed(1);var ds=Math.abs(m.key==='k'?Math.round(diff):parseFloat(diff.toFixed(1)));var arrow=diff===0?'—':(diff>0?'▲':'▼');var dclr=diff===0?'#aaa':(diff>0?'#2563eb':'#e53935');var pctA=g[m.key]?Math.round(va/g[m.key]*100):0,pctB=g[m.key]?Math.round(vb/g[m.key]*100):0;var hitA=pctA>=85&&pctA<=115,hitB=pctB>=85&&pctB<=115;return'<tr style="border-bottom:1px solid #f5f5f2"><td style="padding:10px 6px;font-size:14px;color:#1a1a1a;font-weight:500">'+m.lbl+'</td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#1a1a1a">'+sa+(m.key!=='k'?' '+m.unit:'')+'</span> <span style="font-size:11px;color:'+(hitA?'#16a34a':'#aaa')+'">'+pctA+'%</span></td><td style="padding:10px 6px;font-size:14px"><span style="font-weight:500;color:#1a1a1a">'+sb+(m.key!=='k'?' '+m.unit:'')+'</span> <span style="font-size:11px;color:'+(hitB?'#16a34a':'#aaa')+'">'+pctB+'%</span></td><td style="padding:10px 6px;font-size:14px;font-weight:500;color:'+dclr+';white-space:nowrap">'+arrow+' '+ds+'</td></tr>';}).join('');
+  function foodList(ms,color){if(!ms||!ms.length)return'<div style="font-size:13px;color:#ccc;padding:8px 0">Немає даних</div>';var sorted=ms.slice().sort(function(a,b){return b.k-a.k;});return sorted.map(function(m){return'<div style="padding:8px 0;border-bottom:1px solid #f5f5f2"><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:14px;font-weight:500;color:#1a1a1a">'+m.name+'</span><span style="font-size:13px;font-weight:500;color:'+color+'">'+Math.round(m.k)+' ккал</span></div><div style="display:flex;gap:10px;margin-top:3px"><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#2563eb;margin-right:3px;vertical-align:middle"></span>Б '+m.p.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f59e0b;margin-right:3px;vertical-align:middle"></span>Ж '+m.f.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#16a34a;margin-right:3px;vertical-align:middle"></span>В '+m.c.toFixed(1)+'</span><span style="font-size:12px;color:#555"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#0891b2;margin-right:3px;vertical-align:middle"></span>Кл '+m.fi.toFixed(1)+'</span></div></div>';}).join('');}
   document.getElementById('cmpResult').innerHTML=
-    '<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:14px">Радар (% від цілі)</div>'+radar+'</div>'
+    '<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:16px">% від денної цілі</div>'+M.map(function(m){var va=ta[m.key]||0,vb=tb[m.key]||0,ga=goals()[m.key]||1;var pa=Math.min(va/ga*100,100).toFixed(0),pb=Math.min(vb/ga*100,100).toFixed(0);var sa=m.key==='k'?Math.round(va):va.toFixed(1),sb=m.key==='k'?Math.round(vb):vb.toFixed(1);return'<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:13px;font-weight:500;color:#1a1a1a">'+m.lbl+'</span><span style="font-size:11px;color:#aaa">ціль '+ga+' '+m.unit+'</span></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:11px;color:#2563eb;width:72px;flex-shrink:0">'+fmtDate(a)+'</span><div style="flex:1;height:10px;background:#f0f0ec;border-radius:5px;overflow:hidden"><div style="height:100%;width:'+pa+'%;background:'+m.color+';border-radius:5px;opacity:0.9"></div></div><span style="font-size:11px;color:#555;width:80px;text-align:right;flex-shrink:0">'+sa+' '+m.unit+' · '+pa+'%</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:#e53935;width:72px;flex-shrink:0">'+fmtDate(b)+'</span><div style="flex:1;height:10px;background:#f0f0ec;border-radius:5px;overflow:hidden"><div style="height:100%;width:'+pb+'%;background:'+m.color+';border-radius:5px;opacity:0.5"></div></div><span style="font-size:11px;color:#555;width:80px;text-align:right;flex-shrink:0">'+sb+' '+m.unit+' · '+pb+'%</span></div></div>';}).join('')+'</div>'
     +'<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:12px">Розподіл калорій</div>'+macroBar(ta,'#2563eb',fmtDate(a))+macroBar(tb,'#e53935',fmtDate(b))+'</div>'
     +'<div class="box" style="margin-bottom:10px"><div style="font-size:13px;font-weight:500;color:#555;margin-bottom:10px">Деталі <span style="font-weight:400;color:#aaa;font-size:11px">зелений = 85–115% від цілі</span></div><table style="width:100%;border-collapse:collapse"><thead><tr style="border-bottom:1px solid #eee"><th style="font-size:11px;color:#aaa;text-align:left;padding:5px 6px"></th><th style="font-size:11px;color:#2563eb;text-align:left;padding:5px 6px">'+fmtDate(a)+'</th><th style="font-size:11px;color:#e53935;text-align:left;padding:5px 6px">'+fmtDate(b)+'</th><th style="font-size:11px;color:#aaa;text-align:left;padding:5px 6px">Δ</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
     +'<div class="cmp-food-grid"><div class="box"><div style="font-size:13px;font-weight:500;color:#2563eb;margin-bottom:10px">'+fmtDate(a)+'</div>'+foodList(da.meals,'#2563eb')+'</div><div class="box"><div style="font-size:13px;font-weight:500;color:#e53935;margin-bottom:10px">'+fmtDate(b)+'</div>'+foodList(db.meals,'#e53935')+'</div></div>';
@@ -508,6 +498,5 @@ loadGoals();
 onDateChange(t);
 initCloud();
 </script>
-
 </body>
 </html>
