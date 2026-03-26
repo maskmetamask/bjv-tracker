@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -116,6 +117,7 @@ input[type=date]:focus{border-color:#4a90e2}
 #importFile{display:none}
 .import-note{font-size:11px;color:#bbb;text-align:center;margin-top:6px;line-height:1.5}
 </style>
+
 </head>
 <body>
 
@@ -135,6 +137,7 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- TODAY -->
+
 <div class="page active" id="page-today">
   <div class="day-row">
     <div class="date-input-wrap">
@@ -166,12 +169,14 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- HISTORY -->
+
 <div class="page" id="page-history">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;color:#1a1a1a">Історія</h2>
   <div id="histList"></div>
 </div>
 
 <!-- COMPARE -->
+
 <div class="page" id="page-compare">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:14px;color:#1a1a1a">Порівняння</h2>
   <div class="cmp-controls">
@@ -184,10 +189,12 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- SETTINGS -->
+
 <div class="page" id="page-settings">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;color:#1a1a1a">Налаштування</h2>
 
   <!-- CLOUD SYNC -->
+
   <div class="cloud-box">
     <div class="cloud-title">☁️ Хмарна синхронізація</div>
     <div class="cloud-desc">Дані автоматично зберігаються при кожному збереженні дня. Доступні з будь-якого пристрою.</div>
@@ -201,6 +208,7 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- GOALS -->
+
   <div class="settings-section">
     <div class="settings-title">Денні цілі</div>
     <div class="goals-grid">
@@ -215,6 +223,7 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- BACKUP -->
+
   <div class="settings-section">
     <div class="settings-title">Резервна копія</div>
     <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
@@ -281,8 +290,10 @@ var DB=[
 {n:"апельсиновий фреш",k:45,p:0.7,f:0.2,c:10,fi:0.2},
 {n:"капуоранж",k:60,p:0.5,f:0.2,c:13,fi:0.2},
 {n:"йогурт bakoma men skyr ягоди",k:82,p:7,f:2,c:8.8,fi:0},
+{n:"насіння льону",k:520,p:25.5,f:40.7,c:23.3,fi:20.7},
 ];
 </script>
+
 <script>
 // Products loaded from products.js
 
@@ -498,5 +509,6 @@ loadGoals();
 onDateChange(t);
 initCloud();
 </script>
+
 </body>
 </html>
