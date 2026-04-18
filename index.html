@@ -433,21 +433,21 @@ async function setupCloud(){
     }else{status.textContent='Помилка: '+(data.message||'невірний ключ');}
   }catch(e){status.textContent='Помилка підключення';}
 }
+const JB_KEY='$2a$10$enRyreZu5lf0t8S6JU0APe146uyA/zRbgLFfrPW6/b5FvLYhpOLR6';
+const JB_BIN='69c27ebab7ec241ddc9acab6';
 async function syncToCloud(){
-  var cfg=getCloud();if(!cfg)return;
   setSyncStatus('loading','Зберігаємо...');
   try{
-    var res=await fetch('https://api.jsonbin.io/v3/b/'+cfg.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.key},body:JSON.stringify(buildAllData())});
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JB_KEY},body:JSON.stringify(buildAllData())});
     var data=await res.json();
-    if(data.metadata)setSyncStatus('ok','Збережено в хмарі');
+    if(data.metadata)setSyncStatus('ok','Збережено ✓');
     else setSyncStatus('err','Помилка запису');
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 async function syncFromCloud(showAlert){
-  var cfg=getCloud();if(!cfg)return;
   setSyncStatus('loading','Завантажуємо...');
   try{
-    var res=await fetch('https://api.jsonbin.io/v3/b/'+cfg.binId+'/latest',{headers:{'X-Master-Key':cfg.key}});
+    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN+'/latest',{headers:{'X-Master-Key':JB_KEY}});
     var data=await res.json();
     if(data.record){applyAllData(data.record);setSyncStatus('ok','Синхронізовано');if(showAlert)alert('Дані завантажено з хмари!');}
     else setSyncStatus('err','Помилка читання');
@@ -474,6 +474,9 @@ function applyAllData(data){
   var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);
 }
 function initCloud(){
+  syncFromCloud(false);
+}
+function initCloud_unused(){
   var cfg=getCloud();
   if(cfg){
     document.getElementById('cloudSetup').style.display='none';
