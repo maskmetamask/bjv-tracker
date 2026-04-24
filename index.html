@@ -468,7 +468,10 @@ async function syncFromCloud(showAlert){
     var data=await res.json();
     if(data.record){applyAllData(data.record);setSyncStatus('ok','Синхронізовано');if(showAlert)alert('Дані завантажено з хмари!');}
     else setSyncStatus('err','Помилка читання');
-  }catch(e){setSyncStatus('err','Немає зв\'язку');}
+  }catch(e){
+    if(e instanceof TypeError)setSyncStatus('err','Немає зв\'язку');
+    else setSyncStatus('err','Помилка: '+e.message);
+  }
 }
 function disconnectCloud(){
   if(!confirm('Відключити хмарну синхронізацію?'))return;
