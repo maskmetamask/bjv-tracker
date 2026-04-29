@@ -192,26 +192,23 @@ input[type=date]:focus{border-color:#4a90e2}
 
   <!-- CLOUD -->
   <div class="cloud-box">
-    <div class="cloud-title">☁️ Хмарна синхронізація</div>
-    <div class="cloud-desc">Дані зберігаються в хмарі — доступні з будь-якого пристрою. Використовує JSONBin.io (безкоштовно).</div>
-    <div id="cloudSetup">
-      <div class="lbl">API ключ (X-Master-Key)</div>
-      <input type="password" class="cloud-input" id="cloudKey" placeholder="$2a$10$..."/>
-      <div class="lbl">Bin ID (якщо вже є)</div>
-      <input type="text" class="cloud-input" id="cloudBin" placeholder="залиште порожнім для створення нового"/>
-      <button class="cloud-btn" onclick="setupCloud()">Підключити хмару</button>
-      <div class="cloud-status" id="cloudStatus"></div>
-      <a class="cloud-setup-link" href="https://jsonbin.io" target="_blank">Отримати безкоштовний API ключ →</a>
+    <div class="cloud-title">☁️ Хмарна синхронізація (GitHub Gist)</div>
+    <div class="cloud-desc">Введіть GitHub токен один раз — зберігається тільки у вашому браузері. Потрібен scope: gist.</div>
+    <div id="ghSetup">
+      <input class="cloud-input" type="password" id="ghTokenInput" placeholder="github_pat_..."/>
+      <button class="cloud-btn" onclick="saveGHToken()">Зберегти токен</button>
+      <div class="cloud-status" id="ghStatus"></div>
+      <a class="cloud-setup-link" href="https://github.com/settings/tokens/new?scopes=gist&description=BJV+Tracker" target="_blank">Створити токен на GitHub (scope: gist) →</a>
     </div>
-    <div id="cloudConnected" style="display:none">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <div id="ghConnected" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <div class="sync-dot ok"></div>
-        <span style="font-size:13px;color:#16a34a;font-weight:500">Підключено</span>
-        <span style="font-size:12px;color:#aaa;margin-left:auto" id="binIdLabel"></span>
+        <span style="font-size:13px;color:#16a34a;font-weight:500">Підключено ✓</span>
       </div>
-      <button class="cloud-btn" onclick="syncFromCloud(true)" style="background:#16a34a">⬇ Завантажити з хмари</button>
+      <button class="cloud-btn" onclick="syncFromCloud(true)" style="background:#16a34a;margin-bottom:8px">⬇ Завантажити з хмари</button>
+      <button class="export-btn" onclick="syncToCloud()">↑ Зберегти зараз</button>
       <div class="divider"></div>
-      <button class="export-btn" onclick="disconnectCloud()">Відключити хмару</button>
+      <button class="export-btn" style="color:#e53935;border-color:#fca5a5" onclick="clearGHToken()">✕ Видалити токен</button>
     </div>
   </div>
 
@@ -422,65 +419,77 @@ function renderCustomList(){
     }).join('');
 }
 
-/* ── CLOUD (JSONBin) ── */
-function getCloud(){return JSON.parse(localStorage.getItem('bjv_cloud')||'null');}
-function saveCloudCfg(cfg){localStorage.setItem('bjv_cloud',JSON.stringify(cfg));}
+/* ── CLOUD (GitHub Gist) ── */
+function getGHToken(){return localStorage.getItem('bjv_gh_token')||'';}
+function getGistId(){return localStorage.getItem('bjv_gist_id')||'';}
 function setSyncStatus(state,text){
   var dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
   if(!dot)return;
   dot.className='sync-dot'+(state?' '+state:'');
   txt.textContent=text||'';
 }
-async function setupCloud(){
-  var key=document.getElementById('cloudKey').value.trim();
-  var binId=document.getElementById('cloudBin').value.trim();
-  var status=document.getElementById('cloudStatus');
-  if(!key){status.textContent='Введіть API ключ';return;}
-  status.textContent='Підключаємось...';
-  try{
-    var url=binId?'https://api.jsonbin.io/v3/b/'+binId:'https://api.jsonbin.io/v3/b';
-    var method=binId?'PUT':'POST';
-    var res=await fetch(url,{method:method,headers:{'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Name':'bjv-tracker','X-Bin-Private':'true'},body:JSON.stringify(buildAllData())});
-    var data=await res.json();
-    if(data.metadata&&data.metadata.id){
-      saveCloudCfg({key:key,binId:data.metadata.id});
-      document.getElementById('cloudSetup').style.display='none';
-      document.getElementById('cloudConnected').style.display='block';
-      document.getElementById('binIdLabel').textContent='ID: '+data.metadata.id;
-      status.textContent='';
-      setSyncStatus('ok','Синхронізовано з хмарою');
-    }else{status.textContent='Помилка: '+(data.message||'невірний ключ');}
-  }catch(e){status.textContent='Помилка підключення';}
+function saveGHToken(){
+  var tok=document.getElementById('ghTokenInput').value.trim();
+  var st=document.getElementById('ghStatus');
+  if(!tok){st.textContent='Введіть токен';return;}
+  localStorage.setItem('bjv_gh_token',tok);
+  document.getElementById('ghTokenInput').value='';
+  document.getElementById('ghSetup').style.display='none';
+  document.getElementById('ghConnected').style.display='block';
+  st.textContent='';
+  syncFromCloud(false);
 }
-const JB_KEY='$2a$10$enRyreZu5lf0t8S6JU0APe146uyA/zRbgLFfrPW6/b5FvLYhpOLR6';
-const JB_BIN='69c27ebab7ec241ddc9acab6';
+function clearGHToken(){
+  if(!confirm('Видалити токен і відключити хмару?'))return;
+  localStorage.removeItem('bjv_gh_token');
+  localStorage.removeItem('bjv_gist_id');
+  document.getElementById('ghSetup').style.display='block';
+  document.getElementById('ghConnected').style.display='none';
+  setSyncStatus('','');
+}
 async function syncToCloud(){
+  var tok=getGHToken();
+  if(!tok){setSyncStatus('err','Введіть токен у налаштуваннях');return;}
   setSyncStatus('loading','Зберігаємо...');
   try{
-    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JB_KEY},body:JSON.stringify(buildAllData())});
+    var body={files:{}};
+    body.files['bjv-data.json']={content:JSON.stringify(buildAllData())};
+    var gistId=getGistId();
+    var url=gistId?'https://api.github.com/gists/'+gistId:'https://api.github.com/gists';
+    var method=gistId?'PATCH':'POST';
+    if(!gistId){body.description='БЖВ Трекер';body.public=false;}
+    var res=await fetch(url,{method:method,headers:{'Authorization':'token '+tok,'Content-Type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json();
-    if(data.metadata)setSyncStatus('ok','Збережено ✓');
-    else setSyncStatus('err','Помилка запису');
+    if(data.id){
+      localStorage.setItem('bjv_gist_id',data.id);
+      setSyncStatus('ok','Збережено ✓');
+    }else{
+      setSyncStatus('err','Помилка: '+(data.message||'невідома'));
+    }
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 async function syncFromCloud(showAlert){
+  var tok=getGHToken();
+  if(!tok){setSyncStatus('','');return;}
   setSyncStatus('loading','Завантажуємо...');
   try{
-    var res=await fetch('https://api.jsonbin.io/v3/b/'+JB_BIN+'/latest',{headers:{'X-Master-Key':JB_KEY}});
+    var gistId=getGistId();
+    if(!gistId){
+      var res=await fetch('https://api.github.com/gists?per_page=30',{headers:{'Authorization':'token '+tok}});
+      var list=await res.json();
+      var found=Array.isArray(list)&&list.find(function(g){return g.files&&g.files['bjv-data.json'];});
+      if(found){localStorage.setItem('bjv_gist_id',found.id);gistId=found.id;}
+      else{setSyncStatus('ok','');return;}
+    }
+    var res=await fetch('https://api.github.com/gists/'+gistId,{headers:{'Authorization':'token '+tok}});
     var data=await res.json();
-    if(data.record){applyAllData(data.record);setSyncStatus('ok','Синхронізовано');if(showAlert)alert('Дані завантажено з хмари!');}
-    else setSyncStatus('err','Помилка читання');
-  }catch(e){
-    if(e instanceof TypeError)setSyncStatus('err','Немає зв\'язку');
-    else setSyncStatus('err','Помилка: '+e.message);
-  }
-}
-function disconnectCloud(){
-  if(!confirm('Відключити хмарну синхронізацію?'))return;
-  localStorage.removeItem('bjv_cloud');
-  document.getElementById('cloudSetup').style.display='block';
-  document.getElementById('cloudConnected').style.display='none';
-  setSyncStatus('','');
+    if(data.files&&data.files['bjv-data.json']){
+      var content=JSON.parse(data.files['bjv-data.json'].content);
+      applyAllData(content);
+      setSyncStatus('ok','Синхронізовано ✓');
+      if(showAlert)alert('Дані завантажено!');
+    }else{setSyncStatus('ok','');}
+  }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 function buildAllData(){
   var days=[];
@@ -496,16 +505,9 @@ function applyAllData(data){
   var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);
 }
 function initCloud(){
-  syncFromCloud(false);
-}
-function initCloud_unused(){
-  var cfg=getCloud();
-  if(cfg){
-    document.getElementById('cloudSetup').style.display='none';
-    document.getElementById('cloudConnected').style.display='block';
-    document.getElementById('binIdLabel').textContent='ID: '+cfg.binId;
-    document.getElementById('cloudKey').value=cfg.key;
-    document.getElementById('cloudBin').value=cfg.binId;
+  if(getGHToken()){
+    document.getElementById('ghSetup').style.display='none';
+    document.getElementById('ghConnected').style.display='block';
     syncFromCloud(false);
   }
 }
