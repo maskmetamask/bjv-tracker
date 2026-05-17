@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -128,7 +127,6 @@ input[type=date]:focus{border-color:#4a90e2}
 .custom-empty{font-size:13px;color:#ccc;text-align:center;padding:16px 0}
 .badge-custom{background:#e8f5e9;color:#16a34a}
 </style>
-
 </head>
 <body>
 
@@ -140,7 +138,6 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- TODAY -->
-
 <div class="page active" id="page-today">
   <div class="day-row">
     <div class="date-input-wrap">
@@ -172,14 +169,12 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- HISTORY -->
-
 <div class="page" id="page-history">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Історія</h2>
   <div id="histList"></div>
 </div>
 
 <!-- COMPARE -->
-
 <div class="page" id="page-compare">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:14px">Порівняння</h2>
   <div class="cmp-controls">
@@ -192,12 +187,10 @@ input[type=date]:focus{border-color:#4a90e2}
 </div>
 
 <!-- SETTINGS -->
-
 <div class="page" id="page-settings">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Налаштування</h2>
 
   <!-- CLOUD -->
-
   <div class="cloud-box">
     <div class="cloud-title">☁️ Хмарна синхронізація (GitHub Gist)</div>
     <div class="cloud-desc">Введіть GitHub токен один раз — зберігається тільки у вашому браузері. Потрібен scope: gist.</div>
@@ -220,7 +213,6 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- MY PRODUCTS -->
-
   <div class="settings-section">
     <div class="settings-title">🥦 Мої продукти</div>
     <div class="box" style="margin-bottom:0">
@@ -244,7 +236,6 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- GOALS -->
-
   <div class="settings-section">
     <div class="settings-title">🎯 Денні цілі</div>
     <div class="goals-grid">
@@ -259,7 +250,6 @@ input[type=date]:focus{border-color:#4a90e2}
   </div>
 
   <!-- BACKUP -->
-
   <div class="settings-section">
     <div class="settings-title">💾 Резервна копія</div>
     <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
@@ -372,6 +362,7 @@ var DB=[
 {n:"tanu морозиво йогурт лохина",k:248,p:1.5,f:15,c:26.8,fi:0},
 {n:"чізкейк домашній",k:168,p:12.9,f:7.9,c:11.2,fi:0},
 {n:"манго",k:60,p:0.8,f:0.4,c:15,fi:1.6},
+{n:"омлет з молоком",k:140,p:10.5,f:10,c:1.8,fi:0},
 ];
 
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
@@ -673,6 +664,5 @@ renderCustomList();
 onDateChange(t);
 initCloud();
 </script>
-
 </body>
 </html>
