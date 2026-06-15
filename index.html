@@ -371,6 +371,7 @@ var DB=[
 {n:"йогурт білий безлактозний 2.5%",k:57,p:4,f:2.5,c:4.7,fi:0},
 {n:"сир чедер veldhuyzen 50%",k:390,p:25,f:32,c:0.1,fi:0},
 {n:"червона риба запечена",k:206,p:22,f:13,c:0,fi:0},
+{n:"черешня з кісточкою",k:46,p:0.9,f:0.3,c:11,fi:1.5},
 ];
 
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
@@ -493,20 +494,22 @@ async function syncFromCloud(showAlert){
     var gistId=getGistId();
     if(!gistId){
       var res=await fetch('https://api.github.com/gists?per_page=30',{headers:{'Authorization':'token '+tok}});
+      if(!res.ok){var er=await res.json().catch(function(){return{};});setSyncStatus('err','Помилка '+res.status+': '+(er.message||'токен невалідний'));if(showAlert)alert('Помилка: '+(er.message||'токен невалідний'));return;}
       var list=await res.json();
       var found=Array.isArray(list)&&list.find(function(g){return g.files&&g.files['bjv-data.json'];});
       if(found){localStorage.setItem('bjv_gist_id',found.id);gistId=found.id;}
-      else{setSyncStatus('ok','');return;}
+      else{setSyncStatus('ok','Gist не знайдено');return;}
     }
     var res=await fetch('https://api.github.com/gists/'+gistId,{headers:{'Authorization':'token '+tok}});
+    if(!res.ok){var er=await res.json().catch(function(){return{};});setSyncStatus('err','Помилка '+res.status+': '+(er.message||'невідома'));if(showAlert)alert('Помилка: '+(er.message||'невідома'));return;}
     var data=await res.json();
     if(data.files&&data.files['bjv-data.json']){
       var content=JSON.parse(data.files['bjv-data.json'].content);
       applyAllData(content);
       setSyncStatus('ok','Синхронізовано ✓');
       if(showAlert)alert('Дані завантажено!');
-    }else{setSyncStatus('ok','');}
-  }catch(e){setSyncStatus('err','Немає зв\'язку');}
+    }else{setSyncStatus('err','У Gist немає файлу bjv-data.json');if(showAlert)alert('У Gist немає файлу bjv-data.json');}
+  }catch(e){setSyncStatus('err','Немає зв\'язку');if(showAlert)alert('Немає зв\'язку');}
 }
 function buildAllData(){
   var days=[];
