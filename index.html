@@ -112,8 +112,6 @@ input[type=date]:focus{border-color:#4a90e2}
 .export-btn,.import-btn{width:100%;padding:12px;font-size:14px;font-weight:500;background:#fff;color:#555;border:1.5px solid #ddd;border-radius:10px;cursor:pointer;min-height:46px;margin-bottom:8px}
 #importFile{display:none}
 .import-note{font-size:11px;color:#bbb;text-align:center;margin-top:4px;line-height:1.5}
-
-/* CUSTOM PRODUCTS */
 .np-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .np-field label{font-size:11px;color:#888;display:block;margin-bottom:4px}
 .np-field-full{margin-bottom:8px}
@@ -137,7 +135,6 @@ input[type=date]:focus{border-color:#4a90e2}
   <div class="bnav-item" onclick="showPage('settings',this)"><div class="bnav-icon">⚙️</div><span>Налаштування</span></div>
 </div>
 
-<!-- TODAY -->
 <div class="page active" id="page-today">
   <div class="day-row">
     <div class="date-input-wrap">
@@ -168,13 +165,11 @@ input[type=date]:focus{border-color:#4a90e2}
   <div class="saved-ok" id="savedok"></div>
 </div>
 
-<!-- HISTORY -->
 <div class="page" id="page-history">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Історія</h2>
   <div id="histList"></div>
 </div>
 
-<!-- COMPARE -->
 <div class="page" id="page-compare">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:14px">Порівняння</h2>
   <div class="cmp-controls">
@@ -186,11 +181,8 @@ input[type=date]:focus{border-color:#4a90e2}
   <div id="cmpResult"></div>
 </div>
 
-<!-- SETTINGS -->
 <div class="page" id="page-settings">
   <h2 style="font-size:18px;font-weight:600;margin-bottom:16px">Налаштування</h2>
-
-  <!-- CLOUD -->
   <div class="cloud-box">
     <div class="cloud-title">☁️ Хмарна синхронізація (GitHub Gist)</div>
     <div class="cloud-desc">Введіть GitHub токен один раз — зберігається тільки у вашому браузері. Потрібен scope: gist.</div>
@@ -212,7 +204,6 @@ input[type=date]:focus{border-color:#4a90e2}
     </div>
   </div>
 
-  <!-- MY PRODUCTS -->
   <div class="settings-section">
     <div class="settings-title">🥦 Мої продукти</div>
     <div class="box" style="margin-bottom:0">
@@ -235,7 +226,6 @@ input[type=date]:focus{border-color:#4a90e2}
     </div>
   </div>
 
-  <!-- GOALS -->
   <div class="settings-section">
     <div class="settings-title">🎯 Денні цілі</div>
     <div class="goals-grid">
@@ -249,7 +239,6 @@ input[type=date]:focus{border-color:#4a90e2}
     <div class="ok-msg" id="goalsok"></div>
   </div>
 
-  <!-- BACKUP -->
   <div class="settings-section">
     <div class="settings-title">💾 Резервна копія</div>
     <button class="export-btn" onclick="exportData()">⬇ Експорт даних (JSON)</button>
@@ -261,50 +250,50 @@ input[type=date]:focus{border-color:#4a90e2}
 
 <script>
 var DB=[
-  {n:"яйце куряче варене",k:155,p:13,f:11,c:1.1,fi:0},{n:"яйце куряче смажене",k:196,p:14,f:15,c:0.5,fi:0},
-  {n:"яєчня",k:196,p:14,f:15,c:0.5,fi:0},{n:"яєчний білок",k:52,p:11,f:0.2,c:0.7,fi:0},
-  {n:"яєчний жовток",k:322,p:16,f:27,c:3.6,fi:0},{n:"білок вареного яйця",k:52,p:10.9,f:0.2,c:0.7,fi:0},
-  {n:"гречка варена",k:92,p:3.4,f:0.6,c:20,fi:2.7},{n:"гречка суха",k:343,p:13,f:3.4,c:71,fi:10},
-  {n:"рис варений",k:130,p:2.7,f:0.3,c:28,fi:0.4},{n:"рис сухий",k:365,p:7,f:0.7,c:79,fi:1.3},
-  {n:"рис карнаролі варений",k:200,p:4.4,f:0.3,c:47.9,fi:0},
-  {n:"вівсянка варена",k:68,p:2.4,f:1.4,c:12,fi:1.7},{n:"вівсянка суха",k:389,p:17,f:7,c:66,fi:10},
-  {n:"макарони варені",k:131,p:5,f:1.1,c:25,fi:1.8},
-  {n:"хліб білий",k:265,p:9,f:3.2,c:49,fi:2.7},{n:"хліб чорний",k:259,p:9,f:3.3,c:48,fi:6.8},{n:"хліб цільнозерновий",k:247,p:13,f:4.2,c:41,fi:7},
-  {n:"картопля варена",k:87,p:2,f:0.1,c:20,fi:1.8},{n:"картопляне пюре",k:83,p:2,f:3.3,c:12,fi:1.2},
-  {n:"булгур варений",k:83,p:3.1,f:0.2,c:18.6,fi:4.5},{n:"пшенична каша варена",k:90,p:3.0,f:0.5,c:18.7,fi:1.3},
-  {n:"куряча грудка варена",k:165,p:31,f:3.6,c:0,fi:0},{n:"куряча грудка запечена",k:175,p:32,f:4,c:0,fi:0},
-  {n:"куряче стегно варене",k:209,p:26,f:11,c:0,fi:0},{n:"курка смажена",k:239,p:27,f:14,c:0,fi:0},
-  {n:"яловичина варена",k:254,p:30,f:15,c:0,fi:0},{n:"свинина нежирна",k:242,p:27,f:15,c:0,fi:0},
-  {n:"лосось",k:208,p:20,f:13,c:0,fi:0},{n:"тунець консервований",k:116,p:26,f:1,c:0,fi:0},
-  {n:"оселедець",k:217,p:17,f:16,c:0,fi:0},{n:"палтус філе запечений",k:232,p:17.5,f:17.5,c:0,fi:0},
-  {n:"сир кисломолочний 5%",k:121,p:17,f:5,c:3.3,fi:0},{n:"сир кисломолочний 0%",k:71,p:18,f:0.6,c:1.8,fi:0},
-  {n:"сир кисломолочний 9%",k:159,p:16,f:9,c:3.3,fi:0},{n:"сир зернистий premialle 7%",k:123,p:11.8,f:7,c:3.1,fi:0},
-  {n:"молоко 2.5%",k:52,p:2.8,f:2.5,c:4.7,fi:0},{n:"кефір",k:53,p:2.9,f:2.5,c:4,fi:0},
-  {n:"йогурт натуральний",k:68,p:5,f:3.2,c:3.5,fi:0},{n:"сметана 15%",k:158,p:2.6,f:15,c:3.4,fi:0},
-  {n:"масло вершкове",k:717,p:0.5,f:81,c:0.1,fi:0},{n:"олія соняшникова",k:899,p:0,f:100,c:0,fi:0},{n:"олія оливкова",k:884,p:0,f:100,c:0,fi:0},
-  {n:"сир твердий гауда",k:356,p:25,f:27,c:2.2,fi:0},{n:"сир моцарела",k:280,p:28,f:17,c:3.1,fi:0},
-  {n:"пармезан grana padano тертий",k:398,p:33,f:29,c:7,fi:0},
-  {n:"банан",k:89,p:1.1,f:0.3,c:23,fi:2.6},{n:"яблуко",k:52,p:0.3,f:0.2,c:14,fi:2.4},{n:"апельсин",k:47,p:0.9,f:0.1,c:12,fi:2.4},
-  {n:"груша",k:57,p:0.4,f:0.1,c:15,fi:3.1},{n:"виноград",k:69,p:0.6,f:0.2,c:18,fi:0.9},
-  {n:"полуниця",k:33,p:0.7,f:0.3,c:8,fi:2},{n:"чорниця",k:57,p:0.7,f:0.3,c:14,fi:2.4},{n:"гранат",k:83,p:1.7,f:1.2,c:18.7,fi:4},
-  {n:"помідор",k:18,p:0.9,f:0.2,c:3.9,fi:1.2},{n:"помідори чері",k:18,p:0.9,f:0.2,c:3.5,fi:1.2},
-  {n:"огірок",k:16,p:0.7,f:0.1,c:3.6,fi:0.5},{n:"морква",k:41,p:0.9,f:0.2,c:10,fi:2.8},
-  {n:"капуста білокачанна",k:25,p:1.3,f:0.1,c:5.8,fi:2.5},{n:"капуста пекінська",k:16,p:1.2,f:0.2,c:2.2,fi:1.2},
-  {n:"броколі",k:34,p:2.8,f:0.4,c:7,fi:2.6},{n:"перець болгарський",k:31,p:1,f:0.3,c:6,fi:2.1},
-  {n:"шпинат",k:23,p:2.9,f:0.4,c:3.6,fi:2.2},{n:"авокадо",k:160,p:2,f:15,c:9,fi:7},
-  {n:"горіхи волоські",k:654,p:15,f:65,c:14,fi:6.7},{n:"мигдаль",k:579,p:21,f:50,c:22,fi:12.5},
-  {n:"арахіс",k:567,p:26,f:49,c:16,fi:8.5},{n:"насіння соняшнику",k:584,p:21,f:51,c:20,fi:8.6},
-  {n:"насіння чіа",k:486,p:16.5,f:30.7,c:42.1,fi:34.4},{n:"насіння гарбуза",k:559,p:30.2,f:49.1,c:10.7,fi:6},
-  {n:"мед",k:304,p:0.3,f:0,c:82,fi:0.2},{n:"цукор",k:387,p:0,f:0,c:100,fi:0},{n:"шоколад чорний 70%",k:598,p:7,f:43,c:46,fi:10.9},
-  {n:"борщ",k:40,p:2,f:1.5,c:5,fi:1.5},{n:"котлета м'ясна",k:220,p:14,f:16,c:7,fi:0.5},{n:"піца",k:266,p:11,f:10,c:33,fi:2.3},
-  {n:"чай без цукру",k:1,p:0,f:0,c:0,fi:0},{n:"кава чорна",k:2,p:0.3,f:0,c:0,fi:0},
-  {n:"протеїн сироватковий",k:400,p:80,f:5,c:7,fi:0},
-  {n:"iso whey zero biotech (протеїн)",k:364,p:84,f:2,c:2.4,fi:0},
-  {n:"протеїновий напій zott шоколад",k:77,p:10.9,f:1.2,c:5.1,fi:0},
-  {n:"арахісова паста",k:588,p:25,f:50,c:20,fi:6},
-  {n:"горох варений",k:116,p:8,f:0.4,c:21,fi:8.3},{n:"квасоля варена",k:127,p:8.7,f:0.5,c:22,fi:7.4},
-  {n:"сочевиця варена",k:116,p:9,f:0.4,c:20,fi:7.9},{n:"нут варений",k:164,p:9,f:2.6,c:27,fi:7.6},
-  {n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},
+{n:"яйце куряче варене",k:155,p:13,f:11,c:1.1,fi:0},{n:"яйце куряче смажене",k:196,p:14,f:15,c:0.5,fi:0},
+{n:"яєчня",k:196,p:14,f:15,c:0.5,fi:0},{n:"яєчний білок",k:52,p:11,f:0.2,c:0.7,fi:0},
+{n:"яєчний жовток",k:322,p:16,f:27,c:3.6,fi:0},{n:"білок вареного яйця",k:52,p:10.9,f:0.2,c:0.7,fi:0},
+{n:"гречка варена",k:92,p:3.4,f:0.6,c:20,fi:2.7},{n:"гречка суха",k:343,p:13,f:3.4,c:71,fi:10},
+{n:"рис варений",k:130,p:2.7,f:0.3,c:28,fi:0.4},{n:"рис сухий",k:365,p:7,f:0.7,c:79,fi:1.3},
+{n:"рис карнаролі варений",k:200,p:4.4,f:0.3,c:47.9,fi:0},
+{n:"вівсянка варена",k:68,p:2.4,f:1.4,c:12,fi:1.7},{n:"вівсянка суха",k:389,p:17,f:7,c:66,fi:10},
+{n:"макарони варені",k:131,p:5,f:1.1,c:25,fi:1.8},
+{n:"хліб білий",k:265,p:9,f:3.2,c:49,fi:2.7},{n:"хліб чорний",k:259,p:9,f:3.3,c:48,fi:6.8},{n:"хліб цільнозерновий",k:247,p:13,f:4.2,c:41,fi:7},
+{n:"картопля варена",k:87,p:2,f:0.1,c:20,fi:1.8},{n:"картопляне пюре",k:83,p:2,f:3.3,c:12,fi:1.2},
+{n:"булгур варений",k:83,p:3.1,f:0.2,c:18.6,fi:4.5},{n:"пшенична каша варена",k:90,p:3.0,f:0.5,c:18.7,fi:1.3},
+{n:"куряча грудка варена",k:165,p:31,f:3.6,c:0,fi:0},{n:"куряча грудка запечена",k:175,p:32,f:4,c:0,fi:0},
+{n:"куряче стегно варене",k:209,p:26,f:11,c:0,fi:0},{n:"курка смажена",k:239,p:27,f:14,c:0,fi:0},
+{n:"яловичина варена",k:254,p:30,f:15,c:0,fi:0},{n:"свинина нежирна",k:242,p:27,f:15,c:0,fi:0},
+{n:"лосось",k:208,p:20,f:13,c:0,fi:0},{n:"тунець консервований",k:116,p:26,f:1,c:0,fi:0},
+{n:"оселедець",k:217,p:17,f:16,c:0,fi:0},{n:"палтус філе запечений",k:232,p:17.5,f:17.5,c:0,fi:0},
+{n:"сир кисломолочний 5%",k:121,p:17,f:5,c:3.3,fi:0},{n:"сир кисломолочний 0%",k:71,p:18,f:0.6,c:1.8,fi:0},
+{n:"сир кисломолочний 9%",k:159,p:16,f:9,c:3.3,fi:0},{n:"сир зернистий premialle 7%",k:123,p:11.8,f:7,c:3.1,fi:0},
+{n:"молоко 2.5%",k:52,p:2.8,f:2.5,c:4.7,fi:0},{n:"кефір",k:53,p:2.9,f:2.5,c:4,fi:0},
+{n:"йогурт натуральний",k:68,p:5,f:3.2,c:3.5,fi:0},{n:"сметана 15%",k:158,p:2.6,f:15,c:3.4,fi:0},
+{n:"масло вершкове",k:717,p:0.5,f:81,c:0.1,fi:0},{n:"олія соняшникова",k:899,p:0,f:100,c:0,fi:0},{n:"олія оливкова",k:884,p:0,f:100,c:0,fi:0},
+{n:"сир твердий гауда",k:356,p:25,f:27,c:2.2,fi:0},{n:"сир моцарела",k:280,p:28,f:17,c:3.1,fi:0},
+{n:"пармезан grana padano тертий",k:398,p:33,f:29,c:7,fi:0},
+{n:"банан",k:89,p:1.1,f:0.3,c:23,fi:2.6},{n:"яблуко",k:52,p:0.3,f:0.2,c:14,fi:2.4},{n:"апельсин",k:47,p:0.9,f:0.1,c:12,fi:2.4},
+{n:"груша",k:57,p:0.4,f:0.1,c:15,fi:3.1},{n:"виноград",k:69,p:0.6,f:0.2,c:18,fi:0.9},
+{n:"полуниця",k:33,p:0.7,f:0.3,c:8,fi:2},{n:"чорниця",k:57,p:0.7,f:0.3,c:14,fi:2.4},{n:"гранат",k:83,p:1.7,f:1.2,c:18.7,fi:4},
+{n:"помідор",k:18,p:0.9,f:0.2,c:3.9,fi:1.2},{n:"помідори чері",k:18,p:0.9,f:0.2,c:3.5,fi:1.2},
+{n:"огірок",k:16,p:0.7,f:0.1,c:3.6,fi:0.5},{n:"морква",k:41,p:0.9,f:0.2,c:10,fi:2.8},
+{n:"капуста білокачанна",k:25,p:1.3,f:0.1,c:5.8,fi:2.5},{n:"капуста пекінська",k:16,p:1.2,f:0.2,c:2.2,fi:1.2},
+{n:"броколі",k:34,p:2.8,f:0.4,c:7,fi:2.6},{n:"перець болгарський",k:31,p:1,f:0.3,c:6,fi:2.1},
+{n:"шпинат",k:23,p:2.9,f:0.4,c:3.6,fi:2.2},{n:"авокадо",k:160,p:2,f:15,c:9,fi:7},
+{n:"горіхи волоські",k:654,p:15,f:65,c:14,fi:6.7},{n:"мигдаль",k:579,p:21,f:50,c:22,fi:12.5},
+{n:"арахіс",k:567,p:26,f:49,c:16,fi:8.5},{n:"насіння соняшнику",k:584,p:21,f:51,c:20,fi:8.6},
+{n:"насіння чіа",k:486,p:16.5,f:30.7,c:42.1,fi:34.4},{n:"насіння гарбуза",k:559,p:30.2,f:49.1,c:10.7,fi:6},
+{n:"мед",k:304,p:0.3,f:0,c:82,fi:0.2},{n:"цукор",k:387,p:0,f:0,c:100,fi:0},{n:"шоколад чорний 70%",k:598,p:7,f:43,c:46,fi:10.9},
+{n:"борщ",k:40,p:2,f:1.5,c:5,fi:1.5},{n:"котлета м'ясна",k:220,p:14,f:16,c:7,fi:0.5},{n:"піца",k:266,p:11,f:10,c:33,fi:2.3},
+{n:"чай без цукру",k:1,p:0,f:0,c:0,fi:0},{n:"кава чорна",k:2,p:0.3,f:0,c:0,fi:0},
+{n:"протеїн сироватковий",k:400,p:80,f:5,c:7,fi:0},
+{n:"iso whey zero biotech (протеїн)",k:364,p:84,f:2,c:2.4,fi:0},
+{n:"протеїновий напій zott шоколад",k:77,p:10.9,f:1.2,c:5.1,fi:0},
+{n:"арахісова паста",k:588,p:25,f:50,c:20,fi:6},
+{n:"горох варений",k:116,p:8,f:0.4,c:21,fi:8.3},{n:"квасоля варена",k:127,p:8.7,f:0.5,c:22,fi:7.4},
+{n:"сочевиця варена",k:116,p:9,f:0.4,c:20,fi:7.9},{n:"нут варений",k:164,p:9,f:2.6,c:27,fi:7.6},
+{n:"мюслі",k:363,p:10,f:5,c:68,fi:7},{n:"кукурудза варена",k:96,p:3.4,f:1.5,c:21,fi:2.7},{n:"буряк варений",k:44,p:1.7,f:0.1,c:9.6,fi:2.8},
 {n:"капуста квашена",k:19,p:0.9,f:0.1,c:4.3,fi:2.9},
 {n:"тости mulino bianco цільнозернові",k:384,p:13.5,f:6,c:63,fi:8},
 {n:"печиво milka в шоколадній глазурі",k:496,p:7.5,f:21,c:67,fi:0},
@@ -389,23 +378,16 @@ var DB=[
 var meals=[],sel=null,results=[],hi=-1,tmr=null;
 var customProducts=[];
 var M=[
-  {key:'k',lbl:'Ккал',unit:'ккал',color:'#e53935',g:'gk'},
-  {key:'p',lbl:'Білки',unit:'г',color:'#2563eb',g:'gp'},
-  {key:'f',lbl:'Жири',unit:'г',color:'#f59e0b',g:'gf'},
-  {key:'c',lbl:'Вугл.',unit:'г',color:'#16a34a',g:'gc'},
-  {key:'fi',lbl:'Кліт.',unit:'г',color:'#0891b2',g:'gfi'},
+{key:'k',lbl:'Ккал',unit:'ккал',color:'#e53935',g:'gk'},
+{key:'p',lbl:'Білки',unit:'г',color:'#2563eb',g:'gp'},
+{key:'f',lbl:'Жири',unit:'г',color:'#f59e0b',g:'gf'},
+{key:'c',lbl:'Вугл.',unit:'г',color:'#16a34a',g:'gc'},
+{key:'fi',lbl:'Кліт.',unit:'г',color:'#0891b2',g:'gfi'},
 ];
 
-/* ── CUSTOM PRODUCTS ── */
-function loadCustomProducts(){
-  customProducts=JSON.parse(localStorage.getItem('bjv_custom')||'[]');
-}
-function saveCustomProducts(){
-  localStorage.setItem('bjv_custom',JSON.stringify(customProducts));
-}
-function getFullDB(){
-  return DB.concat(customProducts.map(function(p){return{n:p.n,k:p.k,p:p.p,f:p.f,c:p.c,fi:p.fi,custom:true};}));
-}
+function loadCustomProducts(){customProducts=JSON.parse(localStorage.getItem('bjv_custom')||'[]');}
+function saveCustomProducts(){localStorage.setItem('bjv_custom',JSON.stringify(customProducts));}
+function getFullDB(){return DB.concat(customProducts.map(function(p){return{n:p.n,k:p.k,p:p.p,f:p.f,c:p.c,fi:p.fi,custom:true};}));}
 function addCustomProduct(){
   var name=document.getElementById('npName').value.trim();
   var k=parseFloat(document.getElementById('npK').value)||0;
@@ -417,47 +399,21 @@ function addCustomProduct(){
   if(!k){document.getElementById('npK').focus();return;}
   customProducts.push({n:name,k:k,p:p,f:f,c:c,fi:fi});
   saveCustomProducts();
-  document.getElementById('npName').value='';
-  document.getElementById('npK').value='';
-  document.getElementById('npP').value='';
-  document.getElementById('npF').value='';
-  document.getElementById('npC').value='';
-  document.getElementById('npFi').value='';
-  var ok=document.getElementById('npOk');
-  ok.textContent='«'+name+'» додано!';
-  setTimeout(function(){ok.textContent='';},2500);
-  renderCustomList();
-  syncToCloud();
+  document.getElementById('npName').value='';document.getElementById('npK').value='';document.getElementById('npP').value='';document.getElementById('npF').value='';document.getElementById('npC').value='';document.getElementById('npFi').value='';
+  var ok=document.getElementById('npOk');ok.textContent='«'+name+'» додано!';setTimeout(function(){ok.textContent='';},2500);
+  renderCustomList();syncToCloud();
 }
-function deleteCustomProduct(i){
-  var name=customProducts[i].n;
-  customProducts.splice(i,1);
-  saveCustomProducts();
-  renderCustomList();
-  syncToCloud();
-}
+function deleteCustomProduct(i){customProducts.splice(i,1);saveCustomProducts();renderCustomList();syncToCloud();}
 function renderCustomList(){
   var el=document.getElementById('customList');
   if(!customProducts.length){el.innerHTML='<div class="custom-empty">Ваших продуктів поки немає</div>';return;}
   el.innerHTML='<div class="divider"></div><div style="font-size:12px;font-weight:500;color:#555;margin-bottom:8px">Мої продукти ('+customProducts.length+')</div>'
-    +customProducts.map(function(p,i){
-      return'<div class="custom-item">'
-        +'<div style="flex:1"><div class="custom-item-name">'+p.n+'</div>'
-        +'<div class="custom-item-macros">'+Math.round(p.k)+' ккал · Б'+p.p+' Ж'+p.f+' В'+p.c+' Кл'+p.fi+'</div></div>'
-        +'<button class="custom-del" onclick="deleteCustomProduct('+i+')">×</button>'
-        +'</div>';
-    }).join('');
+    +customProducts.map(function(p,i){return'<div class="custom-item"><div style="flex:1"><div class="custom-item-name">'+p.n+'</div><div class="custom-item-macros">'+Math.round(p.k)+' ккал · Б'+p.p+' Ж'+p.f+' В'+p.c+' Кл'+p.fi+'</div></div><button class="custom-del" onclick="deleteCustomProduct('+i+')">×</button></div>';}).join('');
 }
 
-/* ── CLOUD (GitHub Gist) ── */
 function getGHToken(){return localStorage.getItem('bjv_gh_token')||'';}
 function getGistId(){return localStorage.getItem('bjv_gist_id')||'';}
-function setSyncStatus(state,text){
-  var dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');
-  if(!dot)return;
-  dot.className='sync-dot'+(state?' '+state:'');
-  txt.textContent=text||'';
-}
+function setSyncStatus(state,text){var dot=document.getElementById('syncDot'),txt=document.getElementById('syncText');if(!dot)return;dot.className='sync-dot'+(state?' '+state:'');txt.textContent=text||'';}
 function saveGHToken(){
   var tok=document.getElementById('ghTokenInput').value.trim();
   var st=document.getElementById('ghStatus');
@@ -466,13 +422,11 @@ function saveGHToken(){
   document.getElementById('ghTokenInput').value='';
   document.getElementById('ghSetup').style.display='none';
   document.getElementById('ghConnected').style.display='block';
-  st.textContent='';
-  syncFromCloud(false);
+  st.textContent='';syncFromCloud(false);
 }
 function clearGHToken(){
   if(!confirm('Видалити токен і відключити хмару?'))return;
-  localStorage.removeItem('bjv_gh_token');
-  localStorage.removeItem('bjv_gist_id');
+  localStorage.removeItem('bjv_gh_token');localStorage.removeItem('bjv_gist_id');
   document.getElementById('ghSetup').style.display='block';
   document.getElementById('ghConnected').style.display='none';
   setSyncStatus('','');
@@ -482,20 +436,15 @@ async function syncToCloud(){
   if(!tok){setSyncStatus('err','Введіть токен у налаштуваннях');return;}
   setSyncStatus('loading','Зберігаємо...');
   try{
-    var body={files:{}};
-    body.files['bjv-data.json']={content:JSON.stringify(buildAllData())};
+    var body={files:{}};body.files['bjv-data.json']={content:JSON.stringify(buildAllData())};
     var gistId=getGistId();
     var url=gistId?'https://api.github.com/gists/'+gistId:'https://api.github.com/gists';
     var method=gistId?'PATCH':'POST';
     if(!gistId){body.description='БЖВ Трекер';body.public=false;}
     var res=await fetch(url,{method:method,headers:{'Authorization':'token '+tok,'Content-Type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json();
-    if(data.id){
-      localStorage.setItem('bjv_gist_id',data.id);
-      setSyncStatus('ok','Збережено ✓');
-    }else{
-      setSyncStatus('err','Помилка: '+(data.message||'невідома'));
-    }
+    if(data.id){localStorage.setItem('bjv_gist_id',data.id);setSyncStatus('ok','Збережено ✓');}
+    else{setSyncStatus('err','Помилка: '+(data.message||'невідома'));}
   }catch(e){setSyncStatus('err','Немає зв\'язку');}
 }
 async function syncFromCloud(showAlert){
@@ -536,44 +485,20 @@ function applyAllData(data){
   loadGoals();renderCustomList();
   var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);
 }
-function initCloud(){
-  if(getGHToken()){
-    document.getElementById('ghSetup').style.display='none';
-    document.getElementById('ghConnected').style.display='block';
-    syncFromCloud(false);
-  }
-}
+function initCloud(){if(getGHToken()){document.getElementById('ghSetup').style.display='none';document.getElementById('ghConnected').style.display='block';syncFromCloud(false);}}
 
-/* ── CORE ── */
 function liso(){var t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
 function adate(){return document.getElementById('dayPicker').value||liso();}
-function updLbl(v){
-  var d=new Date(v+'T12:00:00');
-  document.getElementById('datelbl').textContent=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(v===liso()?' — сьогодні':'');
-  document.getElementById('mealSec').textContent='Що з\'їдено '+d.toLocaleDateString('uk-UA',{day:'numeric',month:'long'});
-}
+function updLbl(v){var d=new Date(v+'T12:00:00');document.getElementById('datelbl').textContent=d.toLocaleDateString('uk-UA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(v===liso()?' — сьогодні':'');document.getElementById('mealSec').textContent='Що з\'їдено '+d.toLocaleDateString('uk-UA',{day:'numeric',month:'long'});}
 function onDateChange(v){meals=[];var s=JSON.parse(localStorage.getItem('bjv_'+v)||'null');if(s&&s.meals)meals=s.meals;updLbl(v);render();}
 function goToday(){var t=liso();document.getElementById('dayPicker').value=t;onDateChange(t);}
 function loadGoals(){var s=JSON.parse(localStorage.getItem('bjv_goals')||'null');if(s){document.getElementById('gk').value=s.k||2000;document.getElementById('gp').value=s.p||120;document.getElementById('gf').value=s.f||70;document.getElementById('gc').value=s.c||220;document.getElementById('gfi').value=s.fi||25;}}
 function saveGoals(){localStorage.setItem('bjv_goals',JSON.stringify({k:+document.getElementById('gk').value,p:+document.getElementById('gp').value,f:+document.getElementById('gf').value,c:+document.getElementById('gc').value,fi:+document.getElementById('gfi').value}));document.getElementById('goalsok').textContent='Збережено!';setTimeout(function(){document.getElementById('goalsok').textContent='';},2000);render();}
 function goals(){return{k:+document.getElementById('gk').value||2000,p:+document.getElementById('gp').value||120,f:+document.getElementById('gf').value||70,c:+document.getElementById('gc').value||220,fi:+document.getElementById('gfi').value||25};}
 function totals(a){var o={k:0,p:0,f:0,c:0,fi:0};(a||meals).forEach(function(m){M.forEach(function(x){o[x.key]+=m[x.key];});});return o;}
-function saveDay(){
-  var d=adate();localStorage.setItem('bjv_'+d,JSON.stringify({date:d,meals:meals,totals:totals()}));
-  var el=document.getElementById('savedok');el.textContent='Збережено: '+new Date(d+'T12:00:00').toLocaleDateString('uk-UA',{day:'numeric',month:'long'});
-  setTimeout(function(){el.textContent='';},2500);syncToCloud();
-}
-function exportData(){
-  var blob=new Blob([JSON.stringify(buildAllData(),null,2)],{type:'application/json'});
-  var url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='bjv-backup-'+liso()+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-}
-function importData(input){
-  var file=input.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){try{applyAllData(JSON.parse(e.target.result));alert('Імпортовано!');}catch(err){alert('Помилка файлу');}};
-  reader.readAsText(file);input.value='';
-}
+function saveDay(){var d=adate();localStorage.setItem('bjv_'+d,JSON.stringify({date:d,meals:meals,totals:totals()}));var el=document.getElementById('savedok');el.textContent='Збережено: '+new Date(d+'T12:00:00').toLocaleDateString('uk-UA',{day:'numeric',month:'long'});setTimeout(function(){el.textContent='';},2500);syncToCloud();}
+function exportData(){var blob=new Blob([JSON.stringify(buildAllData(),null,2)],{type:'application/json'});var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='bjv-backup-'+liso()+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+function importData(input){var file=input.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){try{applyAllData(JSON.parse(e.target.result));alert('Імпортовано!');}catch(err){alert('Помилка файлу');}};reader.readAsText(file);input.value='';}
 function getAllDays(){var days=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('bjv_20')){var d=JSON.parse(localStorage.getItem(k));if(d&&d.date)days.push(d);}}return days.sort(function(a,b){return b.date.localeCompare(a.date);});}
 function fmtDate(iso){return new Date(iso+'T12:00:00').toLocaleDateString('uk-UA',{weekday:'short',day:'numeric',month:'long'});}
 function miniSum(t,g){return M.map(function(m){var v=t[m.key]||0,pct=g[m.key]?v/g[m.key]*100:0,d=m.key==='k'?Math.round(v):v.toFixed(1);return'<div class="sc"><div class="sl">'+m.lbl+'</div><div class="sv">'+d+'</div><div class="su">'+m.unit+'</div><div class="ss">'+Math.round(pct)+'%</div><div class="pb"><div class="pf" style="width:'+Math.min(pct,100).toFixed(1)+'%;background:'+m.color+'"></div></div></div>';}).join('');}
@@ -621,7 +546,6 @@ function renderCompare(){
     +'<div class="cmp-food-grid"><div class="box"><div style="font-size:13px;font-weight:500;color:#2563eb;margin-bottom:10px">'+fmtDate(a)+'</div>'+foodList(da.meals,'#2563eb')+'</div><div class="box"><div style="font-size:13px;font-weight:500;color:#e53935;margin-bottom:10px">'+fmtDate(b)+'</div>'+foodList(db.meals,'#e53935')+'</div></div>';
 }
 
-/* ── SEARCH ── */
 function showDD(q){
   var dd=document.getElementById('dd');
   if(!q){dd.style.display='none';results=[];return;}
@@ -629,17 +553,9 @@ function showDD(q){
   results=fullDB.filter(function(x){return x.n.toLowerCase().indexOf(q.toLowerCase())>=0;}).slice(0,8);
   if(!results.length){dd.style.display='none';return;}
   hi=-1;
-  dd.innerHTML=results.map(function(it,i){
-    return'<div class="ddi'+(it.custom?' ddi-custom':'')+'" id="ri'+i+'">'
-      +'<span class="ddn">'+(it.custom?'★ ':'')+it.n+'</span>'
-      +'<span class="ddh">'+Math.round(it.k)+' ккал</span>'
-      +'</div>';
-  }).join('');
+  dd.innerHTML=results.map(function(it,i){return'<div class="ddi'+(it.custom?' ddi-custom':'')+'" id="ri'+i+'"><span class="ddn">'+(it.custom?'★ ':'')+it.n+'</span><span class="ddh">'+Math.round(it.k)+' ккал</span></div>';}).join('');
   dd.style.display='block';
-  for(var i=0;i<results.length;i++){(function(idx){
-    document.getElementById('ri'+idx).addEventListener('mousedown',function(e){e.preventDefault();pick(idx);});
-    document.getElementById('ri'+idx).addEventListener('touchend',function(e){e.preventDefault();pick(idx);});
-  })(i);}
+  for(var i=0;i<results.length;i++){(function(idx){document.getElementById('ri'+idx).addEventListener('mousedown',function(e){e.preventDefault();pick(idx);});document.getElementById('ri'+idx).addEventListener('touchend',function(e){e.preventDefault();pick(idx);});})(i);}
 }
 function pick(i){
   if(i<0||i>=results.length)return;
